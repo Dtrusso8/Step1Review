@@ -1,0 +1,5 @@
+glomerulus
+proximal tubule
+distal tubule
+collecting duct
+loop of henle 

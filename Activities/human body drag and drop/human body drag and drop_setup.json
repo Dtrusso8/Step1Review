@@ -1,0 +1,47 @@
+{
+  "activityName": "human body drag and drop",
+  "dropZones": [
+    {
+      "id": "zone-1753970620720",
+      "term": "heart",
+      "x": 48,
+      "y": 15,
+      "width": 13.33,
+      "height": 10
+    },
+    {
+      "id": "zone-1753970824459",
+      "term": "feet",
+      "x": 49.669999999999995,
+      "y": 86.59884353808246,
+      "width": 13.33,
+      "height": 10
+    },
+    {
+      "id": "zone-1753971230986",
+      "term": "eyes",
+      "x": 43,
+      "y": 4,
+      "width": 13.33,
+      "height": 10
+    },
+    {
+      "id": "zone-1753972013200",
+      "term": "lungs",
+      "x": 43,
+      "y": 20,
+      "width": 13.33,
+      "height": 10
+    },
+    {
+      "id": "zone-1753974285656",
+      "term": "hands",
+      "x": 26,
+      "y": 48.40442176904123,
+      "width": 13.33,
+      "height": 10
+    }
+  ],
+  "savedAt": "2025-07-31T17:25:11.196Z",
+  "version": "1.0"
+}
