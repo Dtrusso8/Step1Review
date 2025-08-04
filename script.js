@@ -21,10 +21,10 @@ class DynamicDragDropActivity {
         this.teacherPassword = '0000';
         this.isTeacherModeUnlocked = false;
         
-        // Score submission configuration for Google Apps Script
+        // Score submission configuration for Google Form
         this.scoreSubmissionConfig = {
             enabled: true,
-            googleAppsScriptUrl: 'https://script.google.com/macros/s/AKfycbw3qNlDKn-K0adqoF7bAUyf77KC-FHo9D5sR8S4P8LwGB2cwjUP9s8DsJdW0euOIrqHqQ/exec',
+            googleFormUrl: 'https://script.google.com/macros/s/AKfycbyw0AR6itqy6CrvoOYrzyDwg1EawucJ2Oj06-i032QC_FKREzj7qE5vrHvSfdrxpsvL/exec',
             fallback: {
                 showInConsole: true,
                 createDownloadableReport: true,
@@ -975,7 +975,7 @@ class DynamicDragDropActivity {
         return Math.floor((endTime - this.activityStartTime) / 1000);
     }
 
-    async submitScore() {
+    submitScore() {
         // Prepare score data with all required fields
         const scoreData = {
             studentName: this.studentName,
@@ -998,62 +998,58 @@ class DynamicDragDropActivity {
         // Show immediate feedback
         this.showFeedback(`Preparing to submit score: ${scoreData.score}/${scoreData.totalTerms} (${scoreData.percentage}%) in ${scoreData.durationFormatted}`, 'success');
         
-        // Submit to NoCodeAPI if configured and enabled
-        if (this.scoreSubmissionConfig.enabled && this.scoreSubmissionConfig.googleAppsScriptUrl) {
-            try {
-                // Format data for Google Apps Script (matching your exact format)
-                const payload = {
-                    studentName: scoreData.studentName,
-                    assignmentName: scoreData.assignmentName,
-                    score: scoreData.score,
-                    percentage: `${scoreData.percentage}%`,
-                    duration: scoreData.durationFormatted,
-                    timeSubmitted: new Date().toISOString(),
-                    activityName: scoreData.activityName
-                };
-                
-                console.log('Submitting to Google Apps Script:', this.scoreSubmissionConfig.googleAppsScriptUrl);
-                console.log('Data being sent:', payload);
-                
-                const response = await fetch(this.scoreSubmissionConfig.googleAppsScriptUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
+        // Submit to Google Sheets using form submission
+        this.submitToGoogleSheet(scoreData.studentName, scoreData.score, scoreData.timer);
+        
+        // Disable submit button after submission
+        this.submitScoreBtn.disabled = true;
+        this.submitScoreBtn.textContent = 'Score Submitted';
+        
+        // Show success message
+        this.showFeedback('✅ Score submitted successfully! Your results have been recorded.', 'success');
+        
+        // Fallback: also store locally and create downloadable report
+        this.handleScoreSubmissionFallback(scoreData);
+    }
 
-                const result = await response.text();
-                console.log('✅ Submitted:', result);
-                this.showFeedback('✅ Score submitted successfully! Your results have been recorded.', 'success');
-                
-                // Disable submit button after successful submission
-                this.submitScoreBtn.disabled = true;
-                this.submitScoreBtn.textContent = 'Score Submitted';
-                
-            } catch (error) {
-                console.error('Error submitting score to Google Apps Script:', error);
-                this.showFeedback('❌ Failed to submit score. Please try again or contact your teacher.', 'error');
-            }
-        } else {
-            // Fallback: show data in console and alert for manual collection
-            console.warn('Google Apps Script not configured or disabled. Score data:', scoreData);
-            
-            if (this.scoreSubmissionConfig.fallback && this.scoreSubmissionConfig.fallback.showInConsole) {
-                console.log('📊 Student Score Data:', scoreData);
-            }
-            
-            if (this.scoreSubmissionConfig.fallback && this.scoreSubmissionConfig.fallback.createDownloadableReport) {
-                this.createScoreReport(scoreData);
-                this.showFeedback('📋 Score report downloaded. Please contact your teacher to submit manually.', 'info');
-            } else {
-                this.showFeedback('📋 Score data logged to console. Please contact your teacher to submit manually.', 'info');
-            }
-            
-            if (this.scoreSubmissionConfig.fallback && this.scoreSubmissionConfig.fallback.showAlert) {
-                alert(`Score Data:\nStudent: ${scoreData.studentName}\nAssignment: ${scoreData.assignmentName}\nScore: ${scoreData.score}/${scoreData.totalTerms} (${scoreData.percentage}%)\nTime: ${scoreData.durationFormatted}\nSubmitted: ${new Date(scoreData.timeSubmitted).toLocaleString()}`);
-            }
-        }
+    submitToGoogleSheet(studentName, quizScore, duration) {
+        // Calculate percentage
+        const totalTerms = this.dropZones.map(z => z.term).filter(t => t).length;
+        const percentage = Math.round((quizScore / totalTerms) * 100);
+        
+        // Convert duration from seconds to minutes
+        const durationMinutes = Math.round((duration / 60) * 100) / 100; // Round to 2 decimal places
+        
+        // Set the form values
+        document.getElementById('formName').value = studentName;
+        document.getElementById('formAssignmentName').value = this.currentActivity.displayName;
+        document.getElementById('formTimeSubmitted').value = new Date().toISOString();
+        document.getElementById('formScore').value = quizScore;
+        document.getElementById('formPercentage').value = percentage;
+        document.getElementById('formDuration').value = durationMinutes;
+        
+        // Debug: Log what we're setting
+        console.log('Setting form values:');
+        console.log('- name:', studentName);
+        console.log('- assignmentName:', this.currentActivity.displayName);
+        console.log('- timeSubmitted:', new Date().toISOString());
+        console.log('- score:', quizScore);
+        console.log('- percentage:', percentage);
+        console.log('- duration:', durationMinutes);
+        
+        // Submit the form
+        document.getElementById('googleSheetForm').submit();
+        
+        // Optional: Show success message
+        console.log('Quiz results sent to Google Sheets!');
+        console.log('Data sent:', {
+            name: studentName,
+            assignmentName: this.currentActivity.displayName,
+            timeSubmitted: new Date().toISOString(),
+            score: quizScore,
+            percentage: percentage,
+            duration: durationMinutes
+        });
     }
 
     handleIncorrectPlacement(dropZone, label) {
@@ -1167,9 +1163,55 @@ class DynamicDragDropActivity {
     }
 
     initializeScoreSubmission() {
-        // This method will be used to set up Google Apps Script URL when ready
-        console.log('Score submission system initialized for Google Apps Script');
-        console.log('To enable Google Apps Script submission, set this.scoreSubmissionConfig.googleAppsScriptUrl to your Google Apps Script web app URL');
+        // This method will be used to set up Google Form submission
+        console.log('Score submission system initialized for Google Form submission');
+        console.log('Using Google Form submission method with URL:', this.scoreSubmissionConfig.googleFormUrl);
+    }
+
+    handleScoreSubmissionFallback(scoreData) {
+        // Store score in localStorage as backup
+        const storedScores = JSON.parse(localStorage.getItem('dragDropScores') || '[]');
+        storedScores.push({
+            ...scoreData,
+            storedAt: new Date().toISOString()
+        });
+        localStorage.setItem('dragDropScores', JSON.stringify(storedScores));
+        
+        // Create downloadable report
+        this.createScoreReport(scoreData);
+        
+        this.showFeedback('📋 Score saved locally and report downloaded. Please contact your teacher to submit manually.', 'info');
+        console.log('Score stored locally as backup:', scoreData);
+    }
+
+    getStoredScores() {
+        const storedScores = JSON.parse(localStorage.getItem('dragDropScores') || '[]');
+        return storedScores;
+    }
+
+    clearStoredScores() {
+        localStorage.removeItem('dragDropScores');
+        this.showFeedback('All stored scores cleared.', 'success');
+    }
+
+    exportStoredScores() {
+        const storedScores = this.getStoredScores();
+        if (storedScores.length === 0) {
+            this.showFeedback('No stored scores found.', 'info');
+            return;
+        }
+        
+        const blob = new Blob([JSON.stringify(storedScores, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `stored_scores_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        this.showFeedback(`Exported ${storedScores.length} stored scores.`, 'success');
     }
 }
 
@@ -1184,4 +1226,5 @@ console.log('- Dynamic activity loading from Activities folder');
 console.log('- Setup mode for configuring drop zones');
 console.log('- Drag and drop functionality');
 console.log('- Progress tracking and feedback');
-console.log('- Local storage for saving zone configurations'); 
+console.log('- Local storage for saving zone configurations');
+console.log('- Google Form score submission'); 
