@@ -147,13 +147,24 @@
                 <p id="progress-text">0 of 0 labels placed correctly</p>
             </div>
 
-            <!-- Submit Button -->
-            <div class="submit-section">
-                <button id="submit-score-btn" class="primary-button" style="display: none;">Submit Score</button>
-            </div>
+                <!-- Submit Button -->
+    <div class="submit-section">
+        <button id="submit-score-btn" class="primary-button" style="display: none;">Submit Score</button>
+    </div>
 
-            <!-- Reset button -->
-            <button id="reset-btn" class="reset-button">Reset Activity</button>
+    <!-- Google Sheet Form (Hidden) -->
+    <form id="googleSheetForm" action="https://script.google.com/macros/s/AKfycbyw0AR6itqy6CrvoOYrzyDwg1EawucJ2Oj06-i032QC_FKREzj7qE5vrHvSfdrxpsvL/exec" method="POST" target="hidden-iframe" style="display: none;">
+        <input type="hidden" id="formName" name="name" value="">
+        <input type="hidden" id="formAssignmentName" name="assignmentName" value="">
+        <input type="hidden" id="formTimeSubmitted" name="timeSubmitted" value="">
+        <input type="hidden" id="formScore" name="score" value="">
+        <input type="hidden" id="formPercentage" name="percentage" value="">
+        <input type="hidden" id="formDuration" name="duration" value="">
+    </form>
+    <iframe name="hidden-iframe" style="display:none;"></iframe>
+
+    <!-- Reset button -->
+    <button id="reset-btn" class="reset-button">Reset Activity</button>
 
             <!-- Feedback messages -->
             <div id="feedback" class="feedback"></div>

@@ -9,11 +9,12 @@ A flexible, web-based drag-and-drop activity app that supports multiple activiti
 - **Interactive Drag & Drop**: Students drag labels to the correct areas
 - **Visual Feedback**: Immediate feedback for correct and incorrect placements
 - **Progress Tracking**: Real-time progress bar showing completion status
-- **Score Submission**: Automatic score submission to NoCodeAPI (Google Sheets, Airtable, Notion, etc.)
+- **Score Submission**: Automatic score submission to Google Apps Script (Google Sheets integration)
 - **Student Data Collection**: Tracks student names, scores, completion times, and submission timestamps
 - **Responsive Design**: Works on desktop, tablet, and mobile devices
 - **No Backend Required**: Fully static - works with just HTML, CSS, and JavaScript
 - **Local Storage**: Saves zone configurations for each activity
+- **Fallback System**: Local storage backup when Google Apps Script is unavailable
 
 ## 🚀 Quick Start
 
@@ -26,9 +27,10 @@ A flexible, web-based drag-and-drop activity app that supports multiple activiti
 ### 📊 Score Collection Setup (Optional)
 
 To automatically collect student scores:
-1. **Read** `NOCODEAPI_SETUP.md` for detailed instructions
-2. **Configure** `nocodeapi-config.js` with your NoCodeAPI settings
-3. **Test** the integration by completing an activity and submitting a score
+1. **Read** `GOOGLE_APPS_SCRIPT_SETUP.md` for detailed instructions
+2. **Set up** the Google Apps Script using `google-apps-script.gs`
+3. **Update** the Google Apps Script URL in `script.js`
+4. **Test** the integration by completing an activity and submitting a score
 
 ## 📁 Project Structure
 
@@ -38,8 +40,8 @@ drag-and-drop/
 ├── styles.css              # Styling and animations
 ├── script.js               # Main application logic
 ├── activity-loader.js      # Activity loading utility
-├── nocodeapi-config.js     # NoCodeAPI configuration
-├── NOCODEAPI_SETUP.md      # NoCodeAPI setup guide
+├── google-apps-script.gs   # Google Apps Script backend
+├── GOOGLE_APPS_SCRIPT_SETUP.md  # Google Apps Script setup guide
 ├── README.md               # This file
 └── Activities/             # Activity data folder
     └── human body drag and drop/

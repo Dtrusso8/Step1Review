@@ -1,0 +1,17 @@
+{
+  "activities": [
+    {
+      "name": "human body drag and drop",
+      "displayName": "Human Body Drag and Drop",
+      "image": "Activities/human body drag and drop/human_body.jpg",
+      "termsFile": "Activities/human body drag and drop/terms.txt",
+      "setupFile": "Activities/human body drag and drop/human body drag and drop_setup.json"
+    },
+    {
+      "name": "nephron",
+      "displayName": "Nephron",
+      "image": "Activities/nephron/Porus_Artwork_EN_F1_logo.png",
+      "termsFile": "Activities/nephron/terms.txt"
+    }
+  ]
+} 
