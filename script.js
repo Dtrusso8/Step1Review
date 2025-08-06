@@ -79,8 +79,8 @@ class DynamicDragDropActivity {
         this.activityTitleDisplay = document.getElementById('activity-title-display');
         this.startActivityBtn = document.getElementById('start-activity-btn');
         this.backToTeacherBtn = document.getElementById('back-to-teacher-btn');
-        this.activityImageDisplay = document.getElementById('activity-image-display');
-        this.activityDropZones = document.getElementById('activity-drop-zones');
+        this.activityImageDisplay = document.getElementById('activity-image'); // Use shared image
+        this.activityDropZones = document.getElementById('drop-zones-container'); // Use shared drop zones
         this.labelsContainer = document.getElementById('labels-container');
         this.progressFill = document.getElementById('progress-fill');
         this.progressText = document.getElementById('progress-text');
@@ -213,12 +213,26 @@ class DynamicDragDropActivity {
             return;
         }
 
+        // Load terms and setup data for the selected activity
+        try {
+            const loader = new ActivityLoader();
+            this.currentActivity.terms = await loader.loadTermsForActivity(this.currentActivity);
+            this.currentActivity.setup = await loader.loadSetupForActivity(this.currentActivity);
+            console.log('Loaded activity data:', this.currentActivity);
+        } catch (error) {
+            console.error('Error loading activity data:', error);
+            this.showFeedback('Error loading activity data.', 'error');
+            return;
+        }
+
         console.log('Loading activity image:', this.currentActivity.image);
         
         // Load activity image and show student mode
         this.activityImage.src = this.currentActivity.image;
         this.activityImage.onload = () => {
             console.log('Activity image loaded successfully');
+            // Show the image now that it's loaded
+            this.activityImage.style.display = 'block';
             // Load drop zones first, then show student mode
             this.loadDropZones();
             this.showStudentMode();
@@ -251,6 +265,8 @@ class DynamicDragDropActivity {
             }, 100);
         } else {
             this.activityImage.onload = () => {
+                // Show the image now that it's loaded
+                this.activityImage.style.display = 'block';
                 setTimeout(() => {
                     this.loadDropZones();
                 }, 100);
@@ -1214,6 +1230,72 @@ class DynamicDragDropActivity {
         this.showFeedback(`Exported ${storedScores.length} stored scores.`, 'success');
     }
 }
+
+// Zoom and pan functionality
+const zoomLevels = {};
+const panOffsets = {};
+let isPanning = false, startX, startY;
+
+function zoomImage(direction, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (!zoomLevels[containerId]) zoomLevels[containerId] = 1;
+    if (!panOffsets[containerId]) panOffsets[containerId] = { x: 0, y: 0 };
+
+    if (direction === 'in') zoomLevels[containerId] += 0.1;
+    if (direction === 'out') zoomLevels[containerId] = Math.max(0.5, zoomLevels[containerId] - 0.1); // allow down to 0.5x
+
+    applyZoomAndPan(containerId);
+}
+
+function resetZoom(containerId) {
+    zoomLevels[containerId] = 1;
+    panOffsets[containerId] = { x: 0, y: 0 };
+    applyZoomAndPan(containerId);
+}
+
+function applyZoomAndPan(containerId) {
+    const container = document.getElementById(containerId);
+    const scale = zoomLevels[containerId];
+    const offset = panOffsets[containerId];
+
+    container.style.transform = `scale(${scale}) translate(${offset.x}px, ${offset.y}px)`;
+    container.style.transformOrigin = 'top left';
+
+    if (scale > 1) {
+        container.classList.add('zoomed');
+    } else {
+        container.classList.remove('zoomed');
+    }
+}
+
+// Panning logic
+document.addEventListener('mousedown', e => {
+    const container = e.target.closest('.image-container.zoomed');
+    if (!container) return;
+
+    isPanning = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    container.dataset.panId = container.id;
+    e.preventDefault();
+});
+
+document.addEventListener('mousemove', e => {
+    if (!isPanning) return;
+    const containerId = document.querySelector('.image-container.zoomed')?.dataset.panId;
+    const offset = panOffsets[containerId];
+    offset.x += e.clientX - startX;
+    offset.y += e.clientY - startY;
+    startX = e.clientX;
+    startY = e.clientY;
+    applyZoomAndPan(containerId);
+});
+
+document.addEventListener('mouseup', () => {
+    isPanning = false;
+});
 
 // Initialize the app when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {

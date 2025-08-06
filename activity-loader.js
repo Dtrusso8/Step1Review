@@ -1,95 +1,155 @@
 // Activity Loader Utility
-// This script dynamically loads activities from the Activities folder
+// This script loads activities from the activities.json file
+// Simplified for local servers and GitHub pages
 
 class ActivityLoader {
     constructor() {
         this.activities = [];
+        console.log('ActivityLoader initialized');
     }
 
     async scanActivitiesFolder() {
+        console.log('Starting scanActivitiesFolder...');
         try {
-            // Dynamically discover activities by scanning the Activities folder
-            const activities = await this.discoverActivities();
-            
-            // Load terms and setup data for each activity
-            for (let activity of activities) {
-                console.log(`Loading activity: ${activity.name}`);
-                activity.terms = await this.loadTermsFromFile(activity.name);
-                activity.setup = await this.loadSetupFromFile(activity.name);
-                console.log(`Activity ${activity.name} loaded:`, activity);
-            }
-
+            // Load activities directly from the JSON file
+            const activities = await this.loadActivitiesFromJSON();
+            console.log('Activities loaded successfully:', activities);
             return activities;
         } catch (error) {
-            console.error('Error loading activities:', error);
+            console.error('Error in scanActivitiesFolder:', error);
             return [];
         }
     }
 
-    async discoverActivities() {
-        const response = await fetch('activities.json');
-        const data = await response.json();
-        console.log('Loaded activities from JSON file:', data.activities);
-        return data.activities;
+    async loadActivitiesFromJSON() {
+        console.log('Starting loadActivitiesFromJSON...');
+        try {
+            // Load using XMLHttpRequest which works better with local servers
+            return new Promise((resolve, reject) => {
+                console.log('Creating XMLHttpRequest for activities.json...');
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', 'activities.json', true);
+                
+                xhr.onreadystatechange = function() {
+                    console.log('XHR state changed:', xhr.readyState, 'status:', xhr.status);
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                console.log('XHR response received, length:', xhr.responseText.length);
+                                console.log('XHR response preview:', xhr.responseText.substring(0, 500));
+                                const data = JSON.parse(xhr.responseText);
+                                console.log('Parsed activities data:', data);
+                                console.log('Activities array length:', data.activities.length);
+                                console.log('Activities array:', data.activities);
+                                
+                                // Process each activity to add terms and setup data
+                                console.log('Starting to process activities...');
+                                const processedActivities = data.activities.map((activity, index) => {
+                                    console.log(`Processing activity ${index + 1}/${data.activities.length}:`, activity.name);
+                                    // For now, we'll load terms and setup data when needed
+                                    // This avoids the file loading issues
+                                    return {
+                                        ...activity,
+                                        terms: [], // Will be loaded when activity is selected
+                                        setup: { dropZones: [] } // Default empty setup
+                                    };
+                                });
+                                
+                                console.log('Processed activities count:', processedActivities.length);
+                                console.log('Processed activities:', processedActivities);
+                                resolve(processedActivities);
+                            } catch (e) {
+                                console.error('Error parsing activities.json:', e);
+                                console.error('Response text:', xhr.responseText);
+                                reject(e);
+                            }
+                        } else {
+                            console.error('Failed to load activities.json:', xhr.status);
+                            console.error('Status text:', xhr.statusText);
+                            reject(new Error(`Failed to load activities.json: ${xhr.status}`));
+                        }
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    console.error('Network error loading activities.json');
+                    reject(new Error('Network error loading activities.json'));
+                };
+                
+                console.log('Sending XHR request...');
+                xhr.send();
+            });
+        } catch (error) {
+            console.error('Error in loadActivitiesFromJSON:', error);
+            throw error;
+        }
     }
 
-    formatDisplayName(folderName) {
-        // Convert folder name to display name
-        // e.g., "human body drag and drop" -> "Human Body Drag and Drop"
-        // Decode URL-encoded characters first
-        const decodedName = decodeURIComponent(folderName);
-        return decodedName
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-    }
-
-    async loadTermsFromFile(activityName) {
-        // Find the activity in the loaded data to get the correct terms file path
-        const activities = await this.discoverActivities();
-        const activity = activities.find(a => a.name === activityName);
-        
-        if (!activity || !activity.termsFile) {
-            throw new Error(`Activity ${activityName} not found or missing terms file`);
+    // This method will be called when an activity is selected to load its terms
+    async loadTermsForActivity(activity) {
+        console.log('Loading terms for activity:', activity.name);
+        if (!activity.termsFile) {
+            console.log(`No terms file configured for ${activity.name}`);
+            return [];
         }
         
-        console.log(`Loading terms from: ${activity.termsFile}`);
-        const response = await fetch(activity.termsFile);
-        const termsText = await response.text();
-        
-        const terms = termsText
-            .split('\n')
-            .map(term => term.trim())
-            .filter(term => term.length > 0);
-        
-        console.log(`Loaded ${terms.length} terms from ${activity.termsFile}:`, terms);
-        return terms;
+        try {
+            const termsText = await this.loadFileAsText(activity.termsFile);
+            const terms = termsText
+                .split('\n')
+                .map(term => term.trim())
+                .filter(term => term.length > 0);
+            
+            console.log(`Loaded ${terms.length} terms for ${activity.name}:`, terms);
+            return terms;
+        } catch (error) {
+            console.error(`Error loading terms for ${activity.name}:`, error);
+            return [];
+        }
     }
 
-    async loadSetupFromFile(activityName) {
-        // Find the activity in the loaded data to get the correct setup file path
-        const activities = await this.discoverActivities();
-        const activity = activities.find(a => a.name === activityName);
-        
-        if (!activity || !activity.setupFile) {
-            console.log(`No setup file configured for ${activityName}, using empty setup`);
+    // This method will be called when an activity is selected to load its setup
+    async loadSetupForActivity(activity) {
+        console.log('Loading setup for activity:', activity.name);
+        if (!activity.setupFile) {
+            console.log(`No setup file configured for ${activity.name}`);
             return { dropZones: [] };
         }
         
-        console.log(`Loading setup from: ${activity.setupFile}`);
-        const response = await fetch(activity.setupFile);
-        
-        if (!response.ok) {
-            console.log(`No setup file found at ${activity.setupFile}, using empty setup`);
+        try {
+            const setupText = await this.loadFileAsText(activity.setupFile);
+            const setupData = JSON.parse(setupText);
+            console.log(`Loaded setup for ${activity.name}:`, setupData);
+            return setupData;
+        } catch (error) {
+            console.log(`No setup file found for ${activity.name} or error loading it, using empty setup`);
             return { dropZones: [] };
         }
-        
-        const setupData = await response.json();
-        console.log(`Loaded setup data from ${activity.setupFile}:`, setupData);
-        return setupData;
     }
 
-
+    async loadFileAsText(filePath) {
+        console.log('Loading file as text:', filePath);
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', filePath, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log('File loaded successfully:', filePath);
+                        resolve(xhr.responseText);
+                    } else {
+                        console.error(`Failed to load ${filePath}:`, xhr.status);
+                        reject(new Error(`Failed to load ${filePath}: ${xhr.status}`));
+                    }
+                }
+            };
+            xhr.onerror = function() {
+                console.error(`Network error loading ${filePath}`);
+                reject(new Error(`Network error loading ${filePath}`));
+            };
+            xhr.send();
+        });
+    }
 }
 
 // Instructions for adding new activities:
@@ -97,9 +157,10 @@ class ActivityLoader {
 To add a new activity:
 
 1. Create a new folder in the Activities directory with the activity name
-2. Add an image file (jpg, png, etc.) to the folder (name it image.jpg, main.png, etc.)
+2. Add an image file (jpg, png, etc.) to the folder
 3. Create a terms.txt file with one term per line
-4. The activity will be automatically detected and loaded!
+4. Add an entry to activities.json with the correct file paths
+5. The activity will be automatically detected and loaded!
 
 Example folder structure:
 Activities/
@@ -107,6 +168,14 @@ Activities/
     image.jpg (or any image file)
     terms.txt
     your-activity-name_setup.json (optional - created when you save setup)
+
+Example activities.json entry:
+{
+  "name": "your-activity-name",
+  "displayName": "Your Activity Display Name",
+  "image": "Activities/your-activity-name/image.jpg",
+  "termsFile": "Activities/your-activity-name/terms.txt"
+}
 */
 
 // Export for use in the main script

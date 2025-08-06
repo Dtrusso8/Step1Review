@@ -12,6 +12,12 @@
       "displayName": "Nephron",
       "image": "Activities/nephron/Porus_Artwork_EN_F1_logo.png",
       "termsFile": "Activities/nephron/terms.txt"
+    },
+    {
+      "name": "Chart",
+      "displayName": "example activity",
+      "image": "Activities/Chart/Chart.png",
+      "termsFile": "Activities/Chart/chart_terms.txt"
     }
   ]
 } 

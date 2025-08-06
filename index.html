@@ -26,6 +26,14 @@
             <button id="load-activity-btn" class="primary-button">Load Activity</button>
         </div>
 
+        <!-- Shared Image Container for Both Modes -->
+        <div class="image-container" id="shared-image-container">
+            <img id="activity-image" alt="Activity Image">
+            
+            <!-- Drop zones will be added here dynamically -->
+            <div id="drop-zones-container"></div>
+        </div>
+
         <!-- Teacher Mode -->
         <div class="teacher-mode" id="teacher-mode" style="display: none;">
             <div class="mode-header">
@@ -41,12 +49,11 @@
             </div>
 
             <div class="teacher-area">
-                <!-- Image container with configurable drop zones -->
-                <div class="image-container">
-                    <img id="activity-image" alt="Activity Image">
-                    
-                    <!-- Drop zones will be added here dynamically -->
-                    <div id="drop-zones-container"></div>
+                <!-- Zoom controls for teacher mode -->
+                <div class="zoom-controls">
+                    <button class="zoom-button" onclick="zoomImage('in', 'shared-image-container')">Zoom In</button>
+                    <button class="zoom-button" onclick="zoomImage('out', 'shared-image-container')">Zoom Out</button>
+                    <button class="zoom-button" onclick="resetZoom('shared-image-container')">Reset</button>
                 </div>
 
                 <!-- Teacher instructions -->
@@ -115,28 +122,29 @@
                 <div class="student-name-display">
                     <strong>Student:</strong> <span id="display-student-name"></span>
                 </div>
+                <!-- Zoom Buttons Here -->
+                <div class="zoom-controls">
+                    <button class="zoom-button" onclick="zoomImage('in', 'shared-image-container')">+</button>
+                    <button class="zoom-button" onclick="zoomImage('out', 'shared-image-container')">−</button>
+                    <button class="zoom-button" onclick="resetZoom('shared-image-container')">Reset</button>
+                </div>
                 <div class="timer-display">
                     <strong>Time:</strong> <span id="timer-display">00:00</span>
                 </div>
             </div>
 
-            <div class="student-area">
-                <!-- Image container with drop zones -->
-                <div class="image-container">
-                    <img id="activity-image-display" alt="Activity Image">
-                    
-                    <!-- Drop zones for activity -->
-                    <div id="activity-drop-zones"></div>
+            <!-- Draggable labels - Fixed position outside image container -->
+            <div class="labels-container" id="labels-container">
+                <h3>Terms to Place:</h3>
+                <div class="student-instructions">
+                    <p>Click "Start Activity" to begin dragging and dropping!</p>
                 </div>
+                <!-- Labels will be added here dynamically -->
+            </div>
 
-                <!-- Draggable labels -->
-                <div class="labels-container" id="labels-container">
-                    <h3>Terms to Place:</h3>
-                    <div class="student-instructions">
-                        <p>Click "Start Activity" to begin dragging and dropping!</p>
-                    </div>
-                    <!-- Labels will be added here dynamically -->
-                </div>
+            <div class="student-area">
+                <!-- Student mode uses the shared image container -->
+                <!-- The shared image container is already defined above -->
             </div>
 
             <!-- Progress and feedback -->

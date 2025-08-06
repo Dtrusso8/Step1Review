@@ -1,0 +1,10 @@
+N gonorrhoeae Moraxella
+N meningitidis
+Haemophilus influenzae, Bordetella pertussis
+Campylobacter jejuni
+Vibrio cholerae
+Heliobacter pylori
+Pseudomonas
+E coli Klebsiella Enterobacter
+Shigella Yersinia
+Salmonella
