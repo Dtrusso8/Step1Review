@@ -231,8 +231,8 @@ class DynamicDragDropActivity {
         this.activityImage.src = this.currentActivity.image;
         this.activityImage.onload = () => {
             console.log('Activity image loaded successfully');
-            // Show the image now that it's loaded
-            this.activityImage.style.display = 'block';
+            // Show the image section now that it's loaded
+            document.getElementById('activity-image-section').style.display = 'block';
             // Load drop zones first, then show student mode
             this.loadDropZones();
             this.showStudentMode();
@@ -255,6 +255,9 @@ class DynamicDragDropActivity {
         this.teacherMode.style.display = 'block';
         this.studentMode.style.display = 'none';
         
+        // Show the image section for teacher mode
+        document.getElementById('activity-image-section').style.display = 'block';
+        
         this.activityTitle.textContent = this.currentActivity.displayName;
         this.loadTerms();
         
@@ -265,8 +268,6 @@ class DynamicDragDropActivity {
             }, 100);
         } else {
             this.activityImage.onload = () => {
-                // Show the image now that it's loaded
-                this.activityImage.style.display = 'block';
                 setTimeout(() => {
                     this.loadDropZones();
                 }, 100);
@@ -340,6 +341,9 @@ class DynamicDragDropActivity {
         document.getElementById('activity-selection').style.display = 'block';
         this.teacherMode.style.display = 'none';
         this.studentMode.style.display = 'none';
+        
+        // Hide the image section on selection page
+        document.getElementById('activity-image-section').style.display = 'none';
         
         // Clear current activity
         this.currentActivity = null;

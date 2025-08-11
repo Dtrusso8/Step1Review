@@ -1,0 +1,87 @@
+{
+  "activityName": "Chart",
+  "dropZones": [
+    {
+      "id": "zone-0",
+      "term": "N gonorrhoeae Moraxella",
+      "x": 5.35,
+      "y": 32.73,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-1",
+      "term": "N meningitidis",
+      "x": 19.81,
+      "y": 32.7,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-2",
+      "term": "Haemophilus influenzae, Bordetella pertussis",
+      "x": 27.86,
+      "y": 17.62,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-3",
+      "term": "Campylobacter jejuni",
+      "x": 44.06,
+      "y": 34.95,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-4",
+      "term": "Vibrio cholerae",
+      "x": 56.56,
+      "y": 35.69,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-5",
+      "term": "Heliobacter pylori",
+      "x": 68.29,
+      "y": 35.28,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-6",
+      "term": "Pseudomonas",
+      "x": 30.86,
+      "y": 71.71,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-7",
+      "term": "Salmonella",
+      "x": 28.9,
+      "y": 86.33,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-8",
+      "term": "Shigella Yersinia",
+      "x": 16.32,
+      "y": 87.3,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-9",
+      "term": "E coli Klebsiella Enterobacter",
+      "x": 42.47,
+      "y": 70.9,
+      "width": 15,
+      "height": 10
+    }
+  ],
+  "savedAt": "2025-08-11T14:03:54.355Z",
+  "version": "1.0"
+}
