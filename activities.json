@@ -18,6 +18,7 @@
       "displayName": "example activity",
       "image": "Activities/Chart/Chart.png",
       "termsFile": "Activities/Chart/chart_terms.txt"
+      "setupFile": "Activities/Chart/Chart_setup.json"
     }
   ]
 } 
