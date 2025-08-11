@@ -173,8 +173,12 @@ class DynamicDragDropActivity {
                     
                     if (this.currentMode === 'teacher') {
                         this.renderDropZones();
+                        // Refit text after re-rendering teacher zones
+                        this.fitAllPlacedLabels();
                     } else if (this.currentMode === 'student') {
                         this.createActivityDropZones();
+                        // Refit text after re-rendering student zones
+                        this.fitAllPlacedLabels();
                     }
                 }, 150); // Slightly longer delay to ensure resize is complete
             }
@@ -212,6 +216,9 @@ class DynamicDragDropActivity {
             this.showFeedback('Activity not found.', 'error');
             return;
         }
+
+        // NEW: Reset UI state for clean slate (defensive clear)
+        this.resetUIState();
 
         // Load terms and setup data for the selected activity
         try {
@@ -284,6 +291,9 @@ class DynamicDragDropActivity {
     showStudentMode() {
         console.log('Showing student mode...');
         this.currentMode = 'student';
+        
+        // NEW: Reset UI state for clean slate
+        this.resetUIState();
         
         // Hide other modes
         document.getElementById('activity-selection').style.display = 'none';
@@ -360,6 +370,9 @@ class DynamicDragDropActivity {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
         }
+        
+        // NEW: Reset UI state for clean slate
+        this.resetUIState();
         
         // Note: We don't clear this.studentName or this.studentNameInput.value
         // so the name persists when switching activities
@@ -930,6 +943,10 @@ class DynamicDragDropActivity {
         placedLabel.draggable = false;
         
         dropZone.appendChild(placedLabel);
+        
+        // Auto-fit font size to the zone
+        this.fitLabelToZone(placedLabel, dropZone);
+        
         dropZone.classList.add('correct');
         dropZone.classList.add('correct-placement');
 
@@ -996,39 +1013,42 @@ class DynamicDragDropActivity {
     }
 
     submitScore() {
-        // Prepare score data with all required fields
         const scoreData = {
             studentName: this.studentName,
             assignmentName: this.currentActivity.displayName,
             score: this.correctPlacements,
             totalTerms: this.dropZones.map(z => z.term).filter(t => t).length,
             percentage: Math.round((this.correctPlacements / this.dropZones.map(z => z.term).filter(t => t).length) * 100),
-            timer: this.getActivityDuration(), // Duration in seconds
-            timeSubmitted: new Date().toISOString(), // Current timestamp
+            timer: this.getActivityDuration(),
+            timeSubmitted: new Date().toISOString(),
             activityName: this.currentActivity.name,
             activityStartTime: this.activityStartTime ? this.activityStartTime.toISOString() : null,
             activityEndTime: this.activityEndTime ? this.activityEndTime.toISOString() : null,
-            // Additional useful data
             completedAt: new Date().toISOString(),
             durationFormatted: `${Math.floor(this.getActivityDuration() / 60)}:${(this.getActivityDuration() % 60).toString().padStart(2, '0')}`
         };
 
-        console.log('Score data to submit:', scoreData);
-        
-        // Show immediate feedback
-        this.showFeedback(`Preparing to submit score: ${scoreData.score}/${scoreData.totalTerms} (${scoreData.percentage}%) in ${scoreData.durationFormatted}`, 'success');
-        
-        // Submit to Google Sheets using form submission
+        // Optional: brief banner is fine, but not required
+        this.showFeedback(
+            `Submitting: ${scoreData.score}/${scoreData.totalTerms} (${scoreData.percentage}%) in ${scoreData.durationFormatted}`,
+            'success'
+        );
+
+        // Send to Google Sheet
         this.submitToGoogleSheet(scoreData.studentName, scoreData.score, scoreData.timer);
-        
-        // Disable submit button after submission
+
+        // PERMANENT confirmation near the button
+        this.showSubmissionStatus({
+            studentName: scoreData.studentName,
+            timeSubmittedISO: scoreData.timeSubmitted,
+            durationFormatted: scoreData.durationFormatted
+        });
+
+        // Disable button to prevent double-submission of the SAME run
         this.submitScoreBtn.disabled = true;
         this.submitScoreBtn.textContent = 'Score Submitted';
-        
-        // Show success message
-        this.showFeedback('✅ Score submitted successfully! Your results have been recorded.', 'success');
-        
-        // Fallback: also store locally and create downloadable report
+
+        // Local fallback + download
         this.handleScoreSubmissionFallback(scoreData);
     }
 
@@ -1126,8 +1146,10 @@ class DynamicDragDropActivity {
         // Reset timer display
         this.timerDisplay.textContent = '00:00';
         
-        // Hide submit button
+        // Hide submit button, also make sure it's re-enabled and label reset
         this.submitScoreBtn.style.display = 'none';
+        this.submitScoreBtn.disabled = false;
+        this.submitScoreBtn.textContent = 'Submit Score';
         
         // Show start activity button again
         this.startActivityBtn.style.display = 'inline-block';
@@ -1232,6 +1254,105 @@ class DynamicDragDropActivity {
         URL.revokeObjectURL(url);
         
         this.showFeedback(`Exported ${storedScores.length} stored scores.`, 'success');
+    }
+
+    // NEW: fully clear student UI state (submit button, status, feedback, progress, timer)
+    resetUIState() {
+        // Reset counters and in-memory flags
+        this.correctPlacements = 0;
+        this.placedLabels.clear();
+        this.isActivityActive = false;
+
+        // Timer
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+        if (this.timerDisplay) this.timerDisplay.textContent = '00:00';
+
+        // Labels & zones
+        if (this.labelsContainer) this.labelsContainer.innerHTML = '<h3>Terms to Place:</h3>';
+        if (this.activityDropZones) this.activityDropZones.innerHTML = '';
+
+        // Progress
+        if (this.progressFill) this.progressFill.style.width = '0%';
+        if (this.progressText) this.progressText.textContent = '0 of 0 labels placed correctly';
+
+        // Feedback (temporary banner)
+        if (this.feedback) {
+            this.feedback.textContent = '';
+            this.feedback.className = 'feedback';
+        }
+
+        // Submit Score button
+        if (this.submitScoreBtn) {
+            this.submitScoreBtn.style.display = 'none';
+            this.submitScoreBtn.disabled = false;
+            this.submitScoreBtn.textContent = 'Submit Score';
+        }
+
+        // Permanent submission note (clear it between runs/activities)
+        const status = document.getElementById('submission-status');
+        if (status && status.parentNode) status.parentNode.removeChild(status);
+
+        // Start button visible again
+        if (this.startActivityBtn) this.startActivityBtn.style.display = 'inline-block';
+    }
+
+    // NEW: Show a permanent submission note near the submit button
+    showSubmissionStatus({ studentName, timeSubmittedISO, durationFormatted }) {
+        let note = document.getElementById('submission-status');
+        if (!note) {
+            note = document.createElement('div');
+            note.id = 'submission-status';
+            note.className = 'submission-status';
+            // place it right below the submit button
+            this.submitScoreBtn.insertAdjacentElement('afterend', note);
+        }
+        const submittedAt = new Date(timeSubmittedISO).toLocaleString();
+        note.textContent = `${studentName} submitted on ${submittedAt} — Time: ${durationFormatted}`;
+    }
+
+    // --- Auto-fit the placed label's font size to the drop zone ---
+    fitLabelToZone(labelEl, zoneEl, { minPx = 10, maxPx = 28 } = {}) {
+        // start optimistic, then shrink until it fits
+        const span = labelEl.querySelector('span') || labelEl;
+        // Guard: if zone has no size yet, try again on the next frame
+        const tryFit = () => {
+            const cw = zoneEl.clientWidth;
+            const ch = zoneEl.clientHeight;
+            if (cw === 0 || ch === 0) {
+                requestAnimationFrame(tryFit);
+                return;
+            }
+
+            let lo = minPx, hi = maxPx, best = minPx;
+            // Binary search for the largest size that fits both width & height
+            while (lo <= hi) {
+                const mid = Math.floor((lo + hi) / 2);
+                span.style.fontSize = mid + 'px';
+                // Force reflow measurements
+                const fits = (labelEl.scrollWidth <= zoneEl.clientWidth) &&
+                             (labelEl.scrollHeight <= zoneEl.clientHeight);
+                if (fits) {
+                    best = mid;
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
+            }
+            span.style.fontSize = best + 'px';
+        };
+        requestAnimationFrame(tryFit);
+    }
+
+    // Refit any already-placed labels (call on resize, etc.)
+    fitAllPlacedLabels() {
+        const zones = this.activityDropZones?.querySelectorAll('.drop-zone') || [];
+        zones.forEach(zone => {
+            const label = zone.querySelector('.placed-label');
+            if (label) this.fitLabelToZone(label, zone);
+        });
     }
 }
 
