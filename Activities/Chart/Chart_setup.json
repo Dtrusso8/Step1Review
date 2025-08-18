@@ -4,84 +4,84 @@
     {
       "id": "zone-0",
       "term": "N gonorrhoeae Moraxella",
-      "x": 5.35,
-      "y": 32.73,
-      "width": 15,
-      "height": 10
+      "x": 9.343054444444444,
+      "y": 34.11884197530865,
+      "width": 10,
+      "height": 8
     },
     {
       "id": "zone-1",
       "term": "N meningitidis",
-      "x": 19.81,
-      "y": 32.7,
-      "width": 15,
-      "height": 10
+      "x": 20.504444444444445,
+      "y": 34.08888888888889,
+      "width": 10,
+      "height": 8
     },
     {
       "id": "zone-2",
       "term": "Haemophilus influenzae, Bordetella pertussis",
-      "x": 27.86,
-      "y": 17.62,
-      "width": 15,
-      "height": 10
+      "x": 30.37740555555556,
+      "y": 17.3114,
+      "width": 10,
+      "height": 8
     },
     {
       "id": "zone-3",
       "term": "Campylobacter jejuni",
-      "x": 44.06,
-      "y": 34.95,
-      "width": 15,
+      "x": 46.664166666666674,
+      "y": 35.25864197530865,
+      "width": 10,
       "height": 10
     },
     {
       "id": "zone-4",
       "term": "Vibrio cholerae",
-      "x": 56.56,
+      "x": 59.829861111111114,
       "y": 35.69,
-      "width": 15,
+      "width": 10,
       "height": 10
     },
     {
       "id": "zone-5",
       "term": "Heliobacter pylori",
-      "x": 68.29,
+      "x": 71.41500555555555,
       "y": 35.28,
-      "width": 15,
+      "width": 10,
       "height": 10
     },
     {
       "id": "zone-6",
       "term": "Pseudomonas",
-      "x": 30.86,
-      "y": 71.71,
-      "width": 15,
-      "height": 10
+      "x": 33.030161111111106,
+      "y": 73.0989098765432,
+      "width": 12,
+      "height": 7
     },
     {
       "id": "zone-7",
       "term": "Salmonella",
-      "x": 28.9,
-      "y": 86.33,
-      "width": 15,
-      "height": 10
+      "x": 30.462516666666662,
+      "y": 86.9473,
+      "width": 8,
+      "height": 5
     },
     {
       "id": "zone-8",
       "term": "Shigella Yersinia",
-      "x": 16.32,
-      "y": 87.3,
-      "width": 15,
-      "height": 10
+      "x": 16.92760555555556,
+      "y": 87.30000000000001,
+      "width": 12,
+      "height": 9
     },
     {
       "id": "zone-9",
       "term": "E coli Klebsiella Enterobacter",
-      "x": 42.47,
-      "y": 70.9,
-      "width": 15,
+      "x": 45.16097222222222,
+      "y": 70.59135802469136,
+      "width": 10,
       "height": 10
     }
   ],
-  "savedAt": "2025-08-11T14:03:54.355Z",
+  "savedAt": "2025-08-18T15:44:21.342Z",
   "version": "1.0"
 }
