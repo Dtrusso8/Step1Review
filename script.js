@@ -7,7 +7,7 @@ class DynamicDragDropActivity {
         this.currentMode = 'selection'; // Start with activity selection
         this.selectedZone = null;
         this.correctPlacements = 0;
-        this.placedLabels = new Set();
+        // Removed placedLabels Set - now using per-element tracking
         this.draggedElement = null;
         
         // New properties for student tracking
@@ -73,6 +73,7 @@ class DynamicDragDropActivity {
         this.saveZoneBtn = document.getElementById('save-zone-btn');
         this.cancelZoneBtn = document.getElementById('cancel-zone-btn');
         this.deleteZoneBtn = document.getElementById('delete-zone-btn');
+        this.resizeAllZonesBtn = document.getElementById('resize-all-zones-btn');
         
         // Student mode elements
         this.studentMode = document.getElementById('student-mode');
@@ -146,6 +147,9 @@ class DynamicDragDropActivity {
         this.saveZoneBtn.addEventListener('click', () => this.saveZone());
         this.cancelZoneBtn.addEventListener('click', () => this.cancelZoneEdit());
         this.deleteZoneBtn.addEventListener('click', () => this.deleteZone());
+        
+        // Resize all zones button
+        this.resizeAllZonesBtn.addEventListener('click', () => this.resizeAllZones());
         
         // Student mode
         this.startActivityBtn.addEventListener('click', () => this.startActivity());
@@ -687,6 +691,42 @@ class DynamicDragDropActivity {
         this.selectedZone = null;
     }
 
+    resizeAllZones() {
+        // Get the current width and height values from the input fields
+        const newWidth = parseFloat(this.zoneWidth.value);
+        const newHeight = parseFloat(this.zoneHeight.value);
+        
+        // Validate the input values
+        if (isNaN(newWidth) || isNaN(newHeight)) {
+            this.showFeedback('Please enter valid Width (%) and Height (%) values first.', 'error');
+            return;
+        }
+        
+        if (newWidth < 5 || newWidth > 50 || newHeight < 5 || newHeight > 50) {
+            this.showFeedback('Width and Height must be between 5% and 50%.', 'error');
+            return;
+        }
+        
+        // Check if there are any zones to resize
+        if (this.dropZones.length === 0) {
+            this.showFeedback('No drop zones exist to resize.', 'error');
+            return;
+        }
+        
+        // Resize all zones to the new dimensions
+        this.dropZones.forEach(zone => {
+            zone.width = newWidth;
+            zone.height = newHeight;
+        });
+        
+        // Re-render the zones and save the changes
+        this.renderDropZones();
+        this.saveDropZones();
+        
+        // Show success feedback
+        this.showFeedback(`All ${this.dropZones.length} drop zones resized to ${newWidth}% × ${newHeight}%.`, 'success');
+    }
+
     clearAllTerms() {
         // Clear all term assignments but keep the zones
         this.dropZones.forEach(zone => {
@@ -801,7 +841,7 @@ class DynamicDragDropActivity {
         
         // Reset activity state
         this.correctPlacements = 0;
-        this.placedLabels.clear();
+        // Removed placedLabels.clear() - no longer using Set
         this.isActivityActive = true;
         
         // Enable dragging on all labels
@@ -836,21 +876,33 @@ class DynamicDragDropActivity {
 
     createDraggableLabels() {
         this.labelsContainer.innerHTML = '<h3>Terms to Place:</h3>';
-        
-        // Only show terms that are assigned to zones
-        const assignedTerms = this.dropZones.map(z => z.term).filter(t => t);
-        
-        if (assignedTerms.length === 0) {
-            // No terms assigned - this will be handled in showStudentMode
-            return;
-        }
-        
-        assignedTerms.forEach(term => {
+
+        // Count how many zones expect each term
+        const counts = {};
+        this.dropZones
+            .map(z => z.term)
+            .filter(Boolean)
+            .forEach(term => { counts[term] = (counts[term] || 0) + 1; });
+
+        // Build one tile per unique term. If count > 1, it becomes multi-use.
+        Object.entries(counts).forEach(([term, count]) => {
             const label = document.createElement('div');
             label.className = 'draggable-label';
-            label.draggable = false; // Start with dragging disabled
+            label.draggable = false; // enabled on Start
             label.dataset.label = term;
-            label.innerHTML = `<span>${term}</span>`;
+
+            if (count > 1) {
+                label.dataset.multi = 'true';
+                label.dataset.remaining = String(count);
+                label.innerHTML = `
+                    <span>${term}</span>
+                    <span class="count-badge">${count}</span>
+                `;
+            } else {
+                label.dataset.multi = 'false';
+                label.innerHTML = `<span>${term}</span>`;
+            }
+
             this.labelsContainer.appendChild(label);
         });
     }
@@ -873,9 +925,20 @@ class DynamicDragDropActivity {
     }
 
     handleDragStart(e) {
-        if (this.placedLabels.has(e.target.dataset.label)) {
+        // Don't let already-used tiles start another drag
+        if (e.target.classList.contains('placed') || e.target.draggable === false) {
             e.preventDefault();
             return;
+        }
+
+        // For multi-use tiles, also ensure there is remaining count (handled below)
+        const isMulti = e.target.dataset.multi === 'true';
+        if (isMulti) {
+            const remaining = parseInt(e.target.dataset.remaining || '0', 10);
+            if (remaining <= 0) {
+                e.preventDefault();
+                return;
+            }
         }
 
         this.draggedElement = e.target;
@@ -901,7 +964,7 @@ class DynamicDragDropActivity {
 
     handleDragEnter(e) {
         e.preventDefault();
-        if (this.draggedElement && !this.placedLabels.has(this.draggedElement.dataset.label)) {
+        if (this.draggedElement && !this.draggedElement.classList.contains('placed')) {
             e.target.classList.add('highlight');
         }
     }
@@ -919,7 +982,7 @@ class DynamicDragDropActivity {
         const labelType = this.draggedElement.dataset.label;
         const targetZone = e.target.dataset.target;
 
-        if (this.placedLabels.has(labelType)) {
+        if (this.draggedElement.classList.contains('placed')) {
             this.showFeedback('This label has already been placed!', 'error');
             return;
         }
@@ -937,23 +1000,39 @@ class DynamicDragDropActivity {
     }
 
     handleCorrectPlacement(dropZone, label) {
+        // Make a placed copy for the zone
         const placedLabel = label.cloneNode(true);
         placedLabel.classList.remove('dragging');
         placedLabel.classList.add('placed-label');
         placedLabel.draggable = false;
-        
+
+        // A multi-use sidebar tile shows a count badge; strip it from the placed copy
+        const badge = placedLabel.querySelector('.count-badge');
+        if (badge) badge.remove();
+
         dropZone.appendChild(placedLabel);
-        
-        // Auto-fit font size to the zone
         this.fitLabelToZone(placedLabel, dropZone);
-        
-        dropZone.classList.add('correct');
-        dropZone.classList.add('correct-placement');
 
-        label.classList.add('placed');
-        label.draggable = false;
+        dropZone.classList.add('correct', 'correct-placement');
 
-        this.placedLabels.add(label.dataset.label);
+        const isMulti = label.dataset.multi === 'true';
+        if (isMulti) {
+            // Decrement remaining, disable tile when it hits zero
+            let remaining = parseInt(label.dataset.remaining || '0', 10);
+            remaining = Math.max(0, remaining - 1);
+            label.dataset.remaining = String(remaining);
+            const tileBadge = label.querySelector('.count-badge');
+            if (tileBadge) tileBadge.textContent = String(remaining);
+            if (remaining === 0) {
+                label.classList.add('placed');
+                label.draggable = false;
+            }
+        } else {
+            // Single-use tiles are consumed after a correct placement
+            label.classList.add('placed');
+            label.draggable = false;
+        }
+
         this.correctPlacements++;
         this.updateProgress();
 
@@ -961,7 +1040,6 @@ class DynamicDragDropActivity {
 
         const assignedTerms = this.dropZones.map(z => z.term).filter(t => t);
         if (this.correctPlacements === assignedTerms.length) {
-            // Activity completed
             this.completeActivity();
         }
 
@@ -1126,12 +1204,20 @@ class DynamicDragDropActivity {
         }
         
         this.correctPlacements = 0;
-        this.placedLabels.clear();
+        // Removed placedLabels.clear() - no longer using Set
 
         const draggableLabels = this.labelsContainer.querySelectorAll('.draggable-label');
         draggableLabels.forEach(label => {
             label.classList.remove('placed');
             label.draggable = false; // Reset to initial state
+            
+            // Reset multi-use tiles to their original count
+            if (label.dataset.multi === 'true') {
+                const originalCount = this.dropZones.filter(z => z.term === label.dataset.label).length;
+                label.dataset.remaining = String(originalCount);
+                const badge = label.querySelector('.count-badge');
+                if (badge) badge.textContent = String(originalCount);
+            }
         });
 
         const dropZones = this.activityDropZones.querySelectorAll('.drop-zone');
@@ -1260,7 +1346,7 @@ class DynamicDragDropActivity {
     resetUIState() {
         // Reset counters and in-memory flags
         this.correctPlacements = 0;
-        this.placedLabels.clear();
+        // Removed placedLabels.clear() - no longer using Set
         this.isActivityActive = false;
 
         // Timer

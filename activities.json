@@ -24,15 +24,22 @@
       "name": "PV Loop",
       "displayName": "Pressure-Volume (PV) Loop",
       "image": "Activities/Pressure-Volume (PV) Loop/PV loop.png",
-      "termsFile": "Activities//Pressure-Volume (PV) Loop/PV loop_terms.txt",
+      "termsFile": "Activities/Pressure-Volume (PV) Loop/PV loop_terms.txt",
       "setupFile": "Activities/Pressure-Volume (PV) Loop/Pressure-Volume (PV) Loop_setup.json"
     },
     {
       "name": "pharm_mechanism of action",
       "displayName": "Pharm_mechanism of action",
       "image": "Activities/Pharm_mechanism of action/pharm_mechanism of action.png",
-      "termsFile": "Activities//Pharm_mechanism of action/pharm_mechanism of actions_terms.txt",
-      "setupFile": "Activities/Pharm_mechanism of action/pharm_mechanism of actions_terms.json"
+      "termsFile": "Activities/Pharm_mechanism of action/pharm_mechanism of actions_terms.txt",
+      "setupFile": "Activities/Pharm_mechanism of action/pharm_mechanism of action_setup.json"
+    },
+    {
+      "name": "shock classification site",
+      "displayName": "Shock Classification Site",
+      "image": "Activities/shock classification site/shock classification.png",
+      "termsFile": "Activities/shock classification site/shock classification_terms.txt",
+      "setupFile": "Activities/shock classification site/shock classification site_setup.json"
     }
   ]
 } 
