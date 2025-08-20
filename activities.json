@@ -15,10 +15,24 @@
     },
     {
       "name": "Chart",
-      "displayName": "example activity",
+      "displayName": "Gram-negative bacteria",
       "image": "Activities/Chart/Chart.png",
       "termsFile": "Activities/Chart/chart_terms.txt",
       "setupFile": "Activities/Chart/Chart_setup.json"
+    },
+    {
+      "name": "PV Loop",
+      "displayName": "Pressure-Volume (PV) Loop",
+      "image": "Activities/Pressure-Volume (PV) Loop/PV loop.png",
+      "termsFile": "Activities//Pressure-Volume (PV) Loop/PV loop_terms.txt",
+      "setupFile": "Activities/Pressure-Volume (PV) Loop/Pressure-Volume (PV) Loop_setup.json"
+    },
+    {
+      "name": "pharm_mechanism of action",
+      "displayName": "Pharm_mechanism of action",
+      "image": "Activities/Pharm_mechanism of action/pharm_mechanism of action.png",
+      "termsFile": "Activities//Pharm_mechanism of action/pharm_mechanism of actions_terms.txt",
+      "setupFile": "Activities/Pharm_mechanism of action/pharm_mechanism of actions_terms.json"
     }
   ]
 } 

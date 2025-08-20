@@ -1,0 +1,95 @@
+{
+  "activityName": "Pressure-Volume (PV) Loop",
+  "dropZones": [
+    {
+      "id": "zone-0",
+      "term": "Isovolumetric Ventricular Relaxation",
+      "x": 16.583333333333332,
+      "y": 28.740759259259253,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "zone-1",
+      "term": "Reduced Ventricular Ejection",
+      "x": 26.000033333333327,
+      "y": 0.9629185185185213,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "zone-2",
+      "term": "Rapid Ventricular Ejection",
+      "x": 65.16669999999999,
+      "y": 14.962948148148152,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-3",
+      "term": "Isovolumetric contraction",
+      "x": 79.66666666666666,
+      "y": 45.55555555555556,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-4",
+      "term": "Mitral Valve Closes",
+      "x": 58.749933333333324,
+      "y": 65.48138888888889,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "zone-5",
+      "term": "Atrial Systole",
+      "x": 84.99996666666667,
+      "y": 78.29626296296296,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "zone-6",
+      "term": "Reduced Ventricular Filling",
+      "x": 37.166700000000006,
+      "y": 49.48151111111112,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "zone-7",
+      "term": "",
+      "x": 51.00003333333334,
+      "y": 47.03706666666666,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "zone-8",
+      "term": "Aortic Valve Closes",
+      "x": 37.416666666666664,
+      "y": 26.740748148148153,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "zone-9",
+      "term": "Aortic Valve Opens",
+      "x": 53.499966666666666,
+      "y": 32.666711111111105,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "zone-10",
+      "term": "Mitral Valve Opens",
+      "x": 35.5,
+      "y": 69.7037037037037,
+      "width": 6,
+      "height": 6
+    }
+  ],
+  "savedAt": "2025-08-19T16:55:08.129Z",
+  "version": "1.0"
+}
