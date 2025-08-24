@@ -3,117 +3,261 @@
   "dropZones": [
     {
       "id": "zone-0",
-      "term": "Furosemide",
-      "x": 16.333333333333332,
-      "y": 23.99997777777778,
+      "acceptedTerms": [
+        "Furosemide",
+        "Spironolactone",
+        "HCTZ",
+        "Triamterene"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 4,
+      "decoy": false,
+      "x": 16.83,
+      "y": 27.56,
       "width": 9,
-      "height": 7
-    },
-    {
-      "id": "zone-1",
-      "term": "Spironolactone",
-      "x": 16.416666666666664,
-      "y": 30.88886296296296,
-      "width": 9,
-      "height": 7
-    },
-    {
-      "id": "zone-2",
-      "term": "HCTZ",
-      "x": 16.166666666666664,
-      "y": 37.925925925925924,
-      "width": 9,
-      "height": 7
-    },
-    {
-      "id": "zone-3",
-      "term": "Triamterene",
-      "x": 16.5,
-      "y": 44.22222222222222,
-      "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-4",
-      "term": "Lisinopril",
-      "x": 38.249966666666666,
-      "y": 26.074092592592592,
+      "acceptedTerms": [
+        "Lisinopril"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 39.17,
+      "y": 27.55,
       "width": 9,
       "height": 7
     },
     {
       "id": "zone-5",
-      "term": "Lisinopril",
-      "x": 38.16663333333333,
-      "y": 50.29627407407408,
+      "acceptedTerms": [
+        "Lisinopril",
+        "Lisinopril"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 39.34,
+      "y": 50.3,
       "width": 9,
       "height": 7
     },
     {
       "id": "zone-6",
-      "term": "Nifedipine",
-      "x": 27.250000000000004,
-      "y": 50.51849259259259,
+      "acceptedTerms": [
+        "Nifedipine",
+        "Verapamil"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 2,
+      "decoy": false,
+      "x": 28,
+      "y": 50.96,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-7",
-      "term": "Losartan",
-      "x": 50.499966666666666,
-      "y": 27.333362962962966,
+      "acceptedTerms": [
+        "Losartan"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 50.83,
+      "y": 27.18,
       "width": 9,
       "height": 7
     },
     {
       "id": "zone-8",
-      "term": "Prazosin",
-      "x": 74.41666666666666,
-      "y": 50.00003703703704,
+      "acceptedTerms": [
+        "Prazosin"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 75.33,
+      "y": 50.74,
       "width": 9,
       "height": 7
     },
     {
       "id": "zone-9",
-      "term": "Clonidine",
-      "x": 87.75,
-      "y": 51.037059259259266,
+      "acceptedTerms": [
+        "Clonidine"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 87.83,
+      "y": 50.89,
       "width": 9,
       "height": 7
     },
     {
       "id": "zone-10",
-      "term": "Clonidine",
-      "x": 86.83333333333333,
-      "y": 75.62965555555556,
+      "acceptedTerms": [
+        "Clonidine"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 87.91,
+      "y": 74.74,
       "width": 9,
       "height": 7
     },
     {
       "id": "zone-11",
-      "term": "Metroprolol",
-      "x": 62.41663333333333,
-      "y": 74.59263703703704,
+      "acceptedTerms": [
+        "Metroprolol"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 63.17,
+      "y": 74.74,
       "width": 9,
       "height": 7
     },
     {
       "id": "zone-12",
-      "term": "Losartan",
-      "x": 50.5,
-      "y": 51.03708518518519,
+      "acceptedTerms": [
+        "Losartan"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 51.25,
+      "y": 51.04,
       "width": 9,
       "height": 7
     },
     {
-      "id": "zone-13",
-      "term": "Verapamil",
-      "x": 26.9167,
-      "y": 58.14816296296297,
+      "id": "zone-1756074693447",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 63.33,
+      "y": 27.19,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074704047",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 75.17,
+      "y": 27.33,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074711373",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 87.75,
+      "y": 27.19,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074721514",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 16.33,
+      "y": 52.22,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074734463",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 16.92,
+      "y": 74.59,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074744492",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 28,
+      "y": 74.74,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074754702",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 50.75,
+      "y": 74.59,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074767863",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 75.42,
+      "y": 74.59,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074781135",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 63.25,
+      "y": 51.33,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074790414",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 27.75,
+      "y": 27.48,
+      "width": 9,
+      "height": 7
+    },
+    {
+      "id": "zone-1756074808936",
+      "acceptedTerms": [],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": true,
+      "x": 38.75,
+      "y": 74.74,
       "width": 9,
       "height": 7
     }
   ],
-  "savedAt": "2025-08-19T18:44:55.392Z",
-  "version": "1.0"
+  "savedAt": "2025-08-24T22:47:43.098Z",
+  "version": "2.0"
 }

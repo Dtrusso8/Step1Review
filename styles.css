@@ -212,24 +212,20 @@ header p {
     margin-bottom: 20px;
 }
 
-/* Responsive image wrapper with zoom support */
+/* Image container */
 .image-container {
     position: relative;
-    width: 100%;
-    max-width: 90vw; /* Ensures image doesn't overflow screen */
-    margin: 0 auto;
-    overflow: hidden;
-    touch-action: none; /* for mobile panning */
+    display: inline-block;
+    max-width: 100%;
+    margin: 20px auto;
+    text-align: center;
 }
 
-/* Shared image container positioning */
-#shared-image-container {
-    position: relative;
-    width: 100%;
-    max-width: 90vw;
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
     margin: 0 auto;
-    overflow: hidden;
-    touch-action: none;
 }
 
 .image-container.zoomed {
@@ -240,13 +236,14 @@ header p {
     cursor: grabbing;
 }
 
-.image-container img {
+/* Shared image container positioning */
+#shared-image-container {
+    position: relative;
     width: 100%;
-    height: auto;
-    max-width: 100%; /* Add this */
-    display: block;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 90vw;
+    margin: 0 auto;
+    overflow: hidden;
+    touch-action: none;
 }
 
 /* Enable zooming */
@@ -274,99 +271,143 @@ header p {
 
 /* Image styling is now handled by .image-container img */
 
+/* Drop zones */
 .drop-zone {
     position: absolute;
-    border: 3px dashed #4B9CD3;
-    border-radius: 10px;
+    border: 2px dashed #4B9CD3;
     background: rgba(75, 156, 211, 0.1);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    /* Ensure zones are positioned relative to the image container */
-    transform-origin: top left;
-    top: 0;
-    left: 0;
-}
-
-.drop-zone.setup-zone {
+    border-radius: 8px;
     cursor: move;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    min-height: 40px;
+}
+
+.drop-zone:hover {
     background: rgba(75, 156, 211, 0.2);
-    transition: all 0.2s ease;
+    border-color: #13294B;
 }
 
-.drop-zone:not(.setup-zone) {
-    background: rgba(75, 156, 211, 0.15);
-    border: 3px dashed #4B9CD3;
-}
-
-.drop-zone.setup-zone:hover {
-    background: rgba(75, 156, 211, 0.3);
-    transform: scale(1.05);
-}
-
-.drop-zone.setup-zone:active {
-    cursor: grabbing;
-    background: rgba(75, 156, 211, 0.4);
-    transform: scale(1.1);
-    z-index: 1000;
-}
-
-.drop-zone.setup-zone.selected {
+.drop-zone.selected {
     border-color: #ff6b6b;
     background: rgba(255, 107, 107, 0.2);
-}
-
-.drop-zone.highlight {
-    background: rgba(75, 156, 211, 0.4);
-    border-color: #4B9CD3;
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(75, 156, 211, 0.6);
-    z-index: 1000;
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
 }
 
 .drop-zone.correct {
-    background: rgba(76, 175, 80, 0.3);
     border-color: #4caf50;
+    background: rgba(76, 175, 80, 0.2);
 }
 
 .drop-zone.incorrect {
-    background: rgba(244, 67, 54, 0.3);
     border-color: #f44336;
+    background: rgba(244, 67, 54, 0.2);
     animation: shake 0.5s ease-in-out;
+}
+
+.drop-zone.highlight {
+    border-color: #ff9800;
+    background: rgba(255, 152, 0, 0.3);
+    transform: scale(1.05);
+}
+
+/* Placed labels container */
+.placed-labels {
+    position: absolute;
+    inset: 2px;  /* Reduced from 6px to minimize space between zone edge and labels */
+    display: grid;
+    gap: 2px;    /* Reduced from 6px to minimize space between labels */
+    grid-template-rows: repeat(var(--rows, 1), 1fr);
+    align-content: stretch;
+    pointer-events: none;      /* keeps the zone droppable */
+    overflow: hidden;
+    width: calc(100% - 4px);   /* Account for inset */
+    height: calc(100% - 4px);  /* Account for inset */
+}
+
+/* Ensure grid cells stretch to fill available space */
+.placed-labels > * {
+    min-height: 0;
+    min-width: 0;
+}
+
+/* Force grid to fill the container */
+.placed-labels {
+    grid-template-rows: repeat(var(--rows, 1), minmax(0, 1fr));
+}
+
+/* Each placed label fills its grid cell and is easy to read */
+.drop-zone .placed-label {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 2px 20px 2px 4px;      /* Minimal padding: 2px top/bottom, 20px right (for ✕), 4px left */
+    border-radius: 4px;              /* Reduced from 8px for tighter fit */
+    border: 2px solid #4B9CD3;
+    background: #fff;                /* high contrast */
+    color: #13294B;
+    font-weight: 700;
+    line-height: 1.1;                /* Tighter line height */
+    pointer-events: auto;
+    min-height: 0;                   /* Allow grid to control height */
+    min-width: 0;                    /* Allow grid to control width */
+}
+
+/* The text area inside the label */
+.drop-zone .placed-label .label-text {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    word-break: break-word;
+    text-align: center;
+    /* Font size will be controlled by JavaScript for proper grid cell fitting */
+}
+
+/* Overlay the ✕ so it doesn't push/squish the text */
+.remove-label-btn {
+    position: absolute;
+    top: 2px;                    /* Reduced from 4px to match new padding */
+    right: 2px;                  /* Reduced from 4px to match new padding */
+    width: 16px;                 /* Reduced from 20px for tighter fit */
+    height: 16px;                /* Reduced from 20px for tighter fit */
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 10px;             /* Reduced from 12px for smaller button */
+    font-weight: 800;
+    display: grid;
+    place-items: center;
+    background: rgba(19,41,75,0.12);
+    color: #13294B;
+    transition: background-color 0.2s;
+}
+
+.remove-label-btn:hover { 
+    background: rgba(19,41,75,0.25); 
 }
 
 /* Keep anything inside a zone centered and contained */
 .drop-zone {
-    display: flex;                 /* center content */
-    align-items: center;
-    justify-content: center;
     overflow: hidden;              /* no spillover */
     padding: 2px;                  /* tiny breathing room */
 }
 
-/* Placed term should behave like a fluid label inside the zone */
-.drop-zone .placed-label {
-    background: transparent;       /* let the image show through */
-    color: #13294B;
-    width: 100%;
-    height: 100%;
-    padding: 2px 4px;              /* small padding so tiny zones still fit */
-    border-radius: 6px;
+/* Center content only when zone is empty (no placed labels) */
+.drop-zone:empty::before {
+    content: '';
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    box-sizing: border-box;
-    font-weight: 700;
-    line-height: 1.1;
+    height: 100%;
+    color: rgba(75, 156, 211, 0.5);
+    font-style: italic;
 }
 
-/* Ensure the text can wrap instead of forcing the box to grow weirdly */
-.drop-zone .placed-label span {
-    display: block;
-    width: 100%;
-    word-break: break-word;        /* wrap long words */
-    overflow: hidden;              /* keep within the zone */
-}
+/* Remove duplicate span rules - they're defined above with proper grid support */
 
 .terms-container {
     flex: 0 0 250px;
@@ -495,6 +536,117 @@ header p {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+}
+
+/* Decoy zone section */
+.decoy-section {
+    grid-column: 1 / -1;
+    margin-bottom: 15px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal;
+    color: #555;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 8px;
+    width: auto;
+}
+
+.checkbox-label .checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    background: white;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #4B9CD3;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Zone configuration fields */
+.zone-config-fields {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end;
+    padding: 15px;
+    background: #f1f3f4;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.zone-config-fields.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Terms multiselect */
+.terms-multiselect {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    padding: 10px;
+}
+
+.term-checkbox {
+    display: grid;
+    grid-template-columns: auto 1fr; /* checkbox | label */
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.term-checkbox:hover {
+    background-color: #f8f9fa;
+}
+
+.term-checkbox input[type="checkbox"] {
+    margin: 0;      /* keep it snug */
+    width: auto;
+}
+
+.term-checkbox label {
+    font-weight: normal;
+    color: #333;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+/* Max labels input */
+.max-labels-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.max-labels-input input[type="number"] {
+    flex: 1;
+}
+
+.max-labels-input .checkbox-label {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 /* Resize All Zones Section */
@@ -884,4 +1036,26 @@ header p {
 
 .modal-buttons button {
     min-width: 100px;
+}
+
+/* Setup zones (teacher mode) */
+.drop-zone.setup-zone {
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.drop-zone.setup-zone:hover {
+    background: rgba(75, 156, 211, 0.3);
+    transform: scale(1.05);
+}
+
+.drop-zone.setup-zone:active {
+    cursor: grabbing;
+    background: rgba(75, 156, 211, 0.4);
+    transform: scale(1.1);
+}
+
+/* Student mode zones */
+.drop-zone:not(.setup-zone) {
+    cursor: default;
 }

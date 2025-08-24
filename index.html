@@ -81,10 +81,35 @@
             <div class="zone-config" id="zone-config" style="display: none;">
                 <h3>Configure Drop Zone</h3>
                 <div class="config-form">
-                    <label for="zone-term">Term:</label>
-                    <select id="zone-term">
-                        <option value="">Select a term...</option>
-                    </select>
+                    <!-- Decoy zone checkbox -->
+                    <div class="decoy-section">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="zone-decoy">
+                            <span class="checkmark"></span>
+                            Decoy Zone (rejects all drops)
+                        </label>
+                    </div>
+                    
+                    <!-- Zone configuration fields (disabled when decoy is checked) -->
+                    <div class="zone-config-fields" id="zone-config-fields">
+                        <label for="zone-accepted-terms">Accepted Terms:</label>
+                        <div class="terms-multiselect" id="zone-accepted-terms">
+                            <!-- Terms will be populated dynamically -->
+                        </div>
+                        
+                        <label for="zone-min-required">Min Labels Required:</label>
+                        <input type="number" id="zone-min-required" min="0" value="1" step="1">
+                        
+                        <label for="zone-max-allowed">Max Labels Allowed:</label>
+                        <div class="max-labels-input">
+                            <input type="number" id="zone-max-allowed" min="1" value="1" step="1">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="zone-unlimited">
+                                <span class="checkmark"></span>
+                                No limit
+                            </label>
+                        </div>
+                    </div>
                     
                     <label for="zone-x">X Position (%):</label>
                     <input type="number" id="zone-x" min="0" max="100" step="1">
