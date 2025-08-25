@@ -4,7 +4,8 @@
       "name": "FP TEAM HOORAH!",
       "displayName": "FP TEAM HOORAH!",
       "image": "Activities/FP TEAM HOORAH!/TEST.png",
-      "termsFile": "Activities/FP TEAM HOORAH!/test_terms.txt"
+      "termsFile": "Activities/FP TEAM HOORAH!/test_terms.txt",
+      "setupFile": "Activities/FP TEAM HOORAH!/test_setup.json"
     },
     {
       "name": "Chart",

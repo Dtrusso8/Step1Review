@@ -1,0 +1,46 @@
+{
+  "activityName": "FP TEAM HOORAH!",
+  "dropZones": [
+    {
+      "id": "zone-0",
+      "acceptedTerms": [
+        "Hilltop"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 14.916600476568703,
+      "y": 39.276702403268956,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-1",
+      "acceptedTerms": [
+        "Mt. Tabor"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 39.58339301292986,
+      "y": 89.31293047159677,
+      "width": 15,
+      "height": 10
+    },
+    {
+      "id": "zone-2",
+      "acceptedTerms": [
+        "Castle"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 65.00019531504316,
+      "y": 39.19118731175095,
+      "width": 15,
+      "height": 10
+    }
+  ],
+  "savedAt": "2025-08-25T15:58:48.051Z",
+  "version": "2.0"
+}

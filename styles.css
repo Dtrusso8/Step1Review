@@ -311,18 +311,27 @@ header p {
     transform: scale(1.05);
 }
 
-/* Placed labels container */
+/* Placed labels container - default grid layout for multi-term zones */
 .placed-labels {
     position: absolute;
-    inset: 2px;  /* Reduced from 6px to minimize space between zone edge and labels */
+    inset: 1px;  /* Reduced from 6px to minimize space between zone edge and labels */
     display: grid;
-    gap: 2px;    /* Reduced from 6px to minimize space between labels */
+    gap: 1px;    /* Reduced from 6px to minimize space between labels */
     grid-template-rows: repeat(var(--rows, 1), 1fr);
     align-content: stretch;
     pointer-events: none;      /* keeps the zone droppable */
     overflow: hidden;
-    width: calc(100% - 4px);   /* Account for inset */
-    height: calc(100% - 4px);  /* Account for inset */
+    width: calc(100% - 1px);   /* Account for inset */
+    height: calc(100% - 1px);  /* Account for inset */
+}
+
+/* Non-grid layout for single-term zones */
+.placed-labels:not(.grid-layout) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-template-rows: unset;
+    gap: 0;
 }
 
 /* Ensure grid cells stretch to fill available space */
@@ -345,16 +354,24 @@ header p {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    padding: 2px 20px 2px 4px;      /* Minimal padding: 2px top/bottom, 20px right (for ✕), 4px left */
-    border-radius: 4px;              /* Reduced from 8px for tighter fit */
+    padding: 1px 1px 1px 1px;      /* Minimal padding: 2px top/bottom, 20px right (for ✕), 4px left */
+    border-radius: 2px;              /* Reduced from 8px for tighter fit */
     border: 2px solid #4B9CD3;
     background: #fff;                /* high contrast */
     color: #13294B;
     font-weight: 700;
-    line-height: 1.1;                /* Tighter line height */
+    line-height: 1;                /* Tighter line height */
     pointer-events: auto;
     min-height: 0;                   /* Allow grid to control height */
-    min-width: 0;                    /* Allow grid to control width */
+    min-width: 0;                   /* Allow grid to control width */
+}
+
+/* Single-term zone labels should fill the entire zone */
+.placed-labels:not(.grid-layout) .placed-label {
+    width: 100%;  /* Fill entire zone */
+    height: 100%; /* Fill entire zone */
+    min-height: unset;
+    min-width: unset;
 }
 
 /* The text area inside the label */

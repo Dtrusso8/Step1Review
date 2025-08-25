@@ -20,6 +20,10 @@ class DynamicDragDropActivity {
         // Password protection properties
         this.teacherPassword = '0000';
         this.isTeacherModeUnlocked = false;
+
+        // Testing: allow multiple submissions (hide briefly, allow multiple)
+        // Set to false to revert to original single-submit behavior
+        this.multiSubmitTesting = true;
         
         // Score submission configuration for Google Form
         this.scoreSubmissionConfig = {
@@ -630,31 +634,48 @@ class DynamicDragDropActivity {
         const container = zoneElement.querySelector('.placed-labels');
         if (!container) return;
         
-        // Decide how many rows the zone should have and set a CSS variable
-        const placed = container.querySelectorAll('.placed-label').length;
-        const rows = (zone.maxAllowed === null || zone.maxAllowed === undefined)
-            ? Math.max(1, placed)
-            : Math.max(1, zone.maxAllowed);
+        // Determine if this is a multi-term zone
+        const isMultiTermZone = zone.maxAllowed === null || zone.maxAllowed > 1;
         
-        console.log(`Layout for zone ${zone.id}: ${placed} labels, ${rows} rows, maxAllowed: ${zone.maxAllowed}`);
-        
-        container.style.setProperty('--rows', rows);
-        
-        // After setting up the grid, refit all labels to their cells
-        // Use a small delay to ensure the grid layout is applied
-        setTimeout(() => {
-            // Log the actual grid cell dimensions
-            const firstLabel = container.querySelector('.placed-label');
-            if (firstLabel) {
-                const cellWidth = firstLabel.clientWidth;
-                const cellHeight = firstLabel.clientHeight;
-                console.log(`Grid cell dimensions: ${cellWidth}x${cellHeight}px`);
-            }
+        if (isMultiTermZone) {
+            // For multi-term zones: use grid layout
+            const placed = container.querySelectorAll('.placed-label').length;
+            const rows = Math.max(1, zone.maxAllowed || placed);
             
-            container.querySelectorAll('.placed-label').forEach(pl => {
-                this.fitLabelToZone(pl, pl);
-            });
-        }, 10);
+            console.log(`Grid layout for zone ${zone.id}: ${placed} labels, ${rows} rows, maxAllowed: ${zone.maxAllowed}`);
+            
+            container.style.setProperty('--rows', rows);
+            container.classList.add('grid-layout');
+            
+            // After setting up the grid, refit all labels to their cells
+            setTimeout(() => {
+                // Log the actual grid cell dimensions
+                const firstLabel = container.querySelector('.placed-label');
+                if (firstLabel) {
+                    const cellWidth = firstLabel.clientWidth;
+                    const cellHeight = firstLabel.clientHeight;
+                    console.log(`Grid cell dimensions: ${cellWidth}x${cellHeight}px`);
+                }
+                
+                container.querySelectorAll('.placed-label').forEach(pl => {
+                    this.fitLabelToZone(pl, pl); // Use individual cell dimensions
+                });
+            }, 10);
+        } else {
+            // For single-term zones: no grid, just center the label
+            console.log(`Single-term layout for zone ${zone.id}: no grid needed`);
+            
+            container.style.removeProperty('--rows');
+            container.classList.remove('grid-layout');
+            
+            // Refit the label to the entire zone size
+            setTimeout(() => {
+                const label = container.querySelector('.placed-label');
+                if (label) {
+                    this.fitLabelToZone(label, zoneElement); // Use entire zone dimensions
+                }
+            }, 10);
+        }
     }
 
     makeZoneDraggable(zoneElement, zone) {
@@ -1431,9 +1452,21 @@ class DynamicDragDropActivity {
             durationFormatted: scoreData.durationFormatted
         });
 
-        // Disable button to prevent double-submission of the SAME run
-        this.submitScoreBtn.disabled = true;
-        this.submitScoreBtn.textContent = 'Score Submitted';
+        // Disable/hide behavior based on testing flag
+        if (!this.multiSubmitTesting) {
+            // Original behavior: disable to prevent double submission
+            this.submitScoreBtn.disabled = true;
+            this.submitScoreBtn.textContent = 'Score Submitted';
+        } else {
+            // Testing behavior: briefly hide then re-enable for repeated submits
+            const btn = this.submitScoreBtn;
+            btn.style.display = 'none';
+            setTimeout(() => {
+                btn.style.display = 'inline-block';
+                btn.disabled = false;
+                btn.textContent = 'Submit Score';
+            }, 1000);
+        }
 
         // Local fallback + download
         this.handleScoreSubmissionFallback(scoreData);
@@ -1701,10 +1734,10 @@ class DynamicDragDropActivity {
         });
         localStorage.setItem('dragDropScores', JSON.stringify(storedScores));
         
-        // Create downloadable report
-        this.createScoreReport(scoreData);
+        // Create downloadable report - DISABLED to prevent automatic download
+        // this.createScoreReport(scoreData);
         
-        this.showFeedback('📋 Score saved locally and report downloaded. Please contact your teacher to submit manually.', 'info');
+        this.showFeedback('📋 Score saved locally. Please contact your teacher to submit manually.', 'info');
         console.log('Score stored locally as backup:', scoreData);
     }
 
@@ -1795,36 +1828,104 @@ class DynamicDragDropActivity {
         note.textContent = `${studentName} submitted on ${submittedAt} — Time: ${durationFormatted}`;
     }
 
-    // --- Auto-fit the placed label's font size to *its own cell* ---
-    fitLabelToZone(labelEl, containerEl = labelEl, { minPx = 10, maxPx = 28 } = {}) {
+    // --- Auto-fit the placed label's font size to the drop zone or grid cell ---
+    fitLabelToZone(labelEl, containerEl = labelEl, { minPx = 10, maxPx } = {}) {
         const span = labelEl.querySelector('.label-text') || labelEl.querySelector('span') || labelEl;
-        
-        // Guard: if container has no size yet, try again on the next frame
+
+        // Compute available space based on whether this is a multi-term or single-term zone
         const tryFit = () => {
-            const cw = containerEl.clientWidth;
-            const ch = containerEl.clientHeight;
-            
-            if (cw === 0 || ch === 0) {
+            // Get the drop zone element that contains this label
+            const dropZone = labelEl.closest('.drop-zone');
+            if (!dropZone) {
                 requestAnimationFrame(tryFit);
                 return;
             }
+
+            // Determine if this is a multi-term zone by checking the zone data
+            const zoneId = dropZone.dataset.zoneId;
+            const zone = this.dropZones.find(z => z.id === zoneId);
+            const isMultiTermZone = zone && (zone.maxAllowed === null || zone.maxAllowed > 1);
+
+            let availableWidth, availableHeight;
             
-            console.log(`Fitting label to container: ${cw}x${ch}px`);
+            if (isMultiTermZone) {
+                // For multi-term zones: use the individual grid cell dimensions (containerEl)
+                const cellWidth = containerEl.clientWidth;
+                const cellHeight = containerEl.clientHeight;
+                
+                if (cellWidth === 0 || cellHeight === 0) {
+                    requestAnimationFrame(tryFit);
+                    return;
+                }
+                
+                // Use 90% of the individual cell size for multi-term zones
+                availableWidth = cellWidth * 0.9;
+                availableHeight = cellHeight * 0.9;
+            } else {
+                // For single-term zones: the label box fills 100% of the zone,
+                // so we calculate text size based on 90% of the label box dimensions
+                const labelBox = labelEl;
+                const labelWidth = labelBox.clientWidth;
+                const labelHeight = labelBox.clientHeight;
+                
+                if (labelWidth === 0 || labelHeight === 0) {
+                    requestAnimationFrame(tryFit);
+                    return;
+                }
+                
+                // Use 90% of the label box size (which fills the entire zone)
+                availableWidth = labelWidth * 0.9;
+                availableHeight = labelHeight * 0.9;
+            }
+
+            // Read the padding from the placed-label itself
+            const cs = getComputedStyle(labelEl);
+            const padL = parseFloat(cs.paddingLeft) || 0;
+            const padR = parseFloat(cs.paddingRight) || 0;
+            const padT = parseFloat(cs.paddingTop) || 0;
+            const padB = parseFloat(cs.paddingBottom) || 0;
+
+            // Subtract padding from available space
+            const textWidth = availableWidth - padL - padR;
+            const textHeight = availableHeight - padT - padB;
+
+            // Debug logging to see what dimensions we're working with
+            console.log(`Font sizing for "${span.textContent.trim()}":`, {
+                availableWidth,
+                availableHeight,
+                textWidth,
+                textHeight,
+                borderWidth,
+                removeButtonSpace
+            });
+
+            // Ensure minimum dimensions
+            if (textWidth <= 0 || textHeight <= 0) {
+                requestAnimationFrame(tryFit);
+                return;
+            }
+
+            // Calculate maximum font size based on available height (90% of available space)
+            const maxFontSize = Math.floor(textHeight * 0.9);
+            const ceiling = Math.max(28, Math.min(maxFontSize, 120)); // never lower than 28, never absurd
+
+            // Check if this is a symbol-only label (arrows, etc.)
+            const labelText = span.textContent.trim();
+            const isSymbolOnly = /^[↑↓←→↑↓]$/.test(labelText) || labelText.length <= 2;
             
-            // Account for padding in the container
-            const availableWidth = cw - 24; // 20px right + 4px left padding
-            const availableHeight = ch - 4;  // 2px top + 2px bottom padding
-            
-            let lo = minPx, hi = maxPx, best = minPx;
-            
-            // Binary search for the largest size that fits both width & height
+            // For symbols, use a higher minimum size
+            const effectiveMinPx = isSymbolOnly ? Math.max(40, minPx) : minPx;
+
+            let lo = effectiveMinPx, hi = (typeof maxPx === 'number' ? maxPx : ceiling), best = effectiveMinPx;
+
+            // Binary search for largest size that fits within the calculated available space
             while (lo <= hi) {
                 const mid = Math.floor((lo + hi) / 2);
                 span.style.fontSize = mid + 'px';
-                
-                // Force reflow measurements
-                const fits = (labelEl.scrollWidth <= availableWidth) && (labelEl.scrollHeight <= availableHeight);
-                
+
+                // Force reflow-based fit check
+                const fits = (labelEl.scrollWidth <= textWidth) && (labelEl.scrollHeight <= textHeight);
+
                 if (fits) {
                     best = mid;
                     lo = mid + 1;
@@ -1832,18 +1933,28 @@ class DynamicDragDropActivity {
                     hi = mid - 1;
                 }
             }
-            
+
             span.style.fontSize = best + 'px';
-            console.log(`Label fitted with font size: ${best}px (container: ${cw}x${ch}, available: ${availableWidth}x${availableHeight})`);
         };
-        
+
         requestAnimationFrame(tryFit);
     }
 
     // Refit all placed labels (call on resize, etc.)
     fitAllPlacedLabels() {
         const labels = this.activityDropZones?.querySelectorAll('.placed-label') || [];
-        labels.forEach(pl => this.fitLabelToZone(pl, pl));
+        labels.forEach(pl => {
+            const dropZone = pl.closest('.drop-zone');
+            const isMultiTermZone = dropZone && dropZone.querySelector('.placed-labels')?.classList.contains('grid-layout');
+            
+            if (isMultiTermZone) {
+                // For multi-term zones: fit to individual cell
+                this.fitLabelToZone(pl, pl);
+            } else {
+                // For single-term zones: fit to entire zone
+                this.fitLabelToZone(pl, dropZone);
+            }
+        });
     }
 
     checkAllZonesComplete() {
