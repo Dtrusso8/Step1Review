@@ -359,6 +359,8 @@ class DynamicDragDropActivity {
                 }
                 
                 console.log('Student mode setup complete');
+                // Ensure progress shows term-based totals immediately on load
+                this.updateProgress();
             }, 100); // Small delay to ensure image is fully rendered
         };
     }
@@ -1415,17 +1417,18 @@ class DynamicDragDropActivity {
     }
 
     submitScore() {
-        // Calculate score based on actual drop zones only (exclude decoy zones)
-        const actualZones = this.dropZones.filter(zone => !zone.decoy);
-        const totalZones = actualZones.length;
-        const correctZones = this.calculateCorrectZones();
-        const percentage = Math.round((correctZones / totalZones) * 100);
+        // Calculate score based on total expected labels (exclude decoy zones)
+        const totalExpectedLabels = this.calculateTotalExpectedLabels();
+        const placedCorrectLabels = this.calculatePlacedLabels();
+        const percentage = totalExpectedLabels > 0
+            ? Math.round((placedCorrectLabels / totalExpectedLabels) * 100)
+            : 0;
         
         const scoreData = {
             studentName: this.studentName,
             assignmentName: this.currentActivity.displayName,
-            score: correctZones,
-            totalZones: totalZones,
+            score: placedCorrectLabels,
+            totalLabels: totalExpectedLabels,
             percentage: percentage,
             timer: this.getActivityDuration(),
             timeSubmitted: new Date().toISOString(),
@@ -1438,7 +1441,7 @@ class DynamicDragDropActivity {
 
         // Optional: brief banner is fine, but not required
         this.showFeedback(
-            `Submitting: ${scoreData.score}/${scoreData.totalZones} zones correct (${scoreData.percentage}%) in ${scoreData.durationFormatted}`,
+            `Submitting: ${scoreData.score}/${scoreData.totalLabels} terms correct (${scoreData.percentage}%) in ${scoreData.durationFormatted}`,
             'success'
         );
 
@@ -1473,10 +1476,11 @@ class DynamicDragDropActivity {
     }
 
     submitToGoogleSheet(studentName, quizScore, duration) {
-        // Calculate percentage based on actual drop zones only (exclude decoy zones)
-        const actualZones = this.dropZones.filter(zone => !zone.decoy);
-        const totalZones = actualZones.length;
-        const percentage = Math.round((quizScore / totalZones) * 100);
+        // Calculate percentage based on total expected labels (exclude decoy zones)
+        const totalExpectedLabels = this.calculateTotalExpectedLabels();
+        const percentage = totalExpectedLabels > 0
+            ? Math.round((quizScore / totalExpectedLabels) * 100)
+            : 0;
         
         // Convert duration from seconds to minutes
         const durationMinutes = Math.round((duration / 60) * 100) / 100; // Round to 2 decimal places
@@ -1523,64 +1527,13 @@ class DynamicDragDropActivity {
     }
 
     updateProgress() {
-        // Count correct zones for actual drop zones only (exclude decoy zones)
-        let correctZones = 0;
-        let totalZones = 0;
-        
-        this.dropZones.forEach(zone => {
-            if (!zone.decoy) { // Only count non-decoy zones
-                totalZones++;
-                const zoneElement = document.getElementById(zone.id);
-                if (zoneElement) {
-                    const placedLabels = zoneElement.querySelectorAll('.placed-label');
-                    const placedCount = placedLabels.length;
-                    
-                    // Check if all placed terms are accepted
-                    const allTermsAccepted = Array.from(placedLabels).every(label => {
-                        const term = label.querySelector('span').textContent;
-                        return zone.acceptedTerms.includes(term);
-                    });
-                    
-                    // Check if count meets requirements
-                    const meetsMin = placedCount >= zone.minRequired;
-                    const meetsMax = zone.maxAllowed === null || placedCount <= zone.maxAllowed;
-                    
-                    if (allTermsAccepted && meetsMin && meetsMax) {
-                        correctZones++;
-                    }
-                }
-            }
-        });
-        
-        const percentage = totalZones > 0 ? (correctZones / totalZones) * 100 : 0;
+        // Term-level progress across non-decoy zones
+        const totalExpected = this.calculateTotalExpectedLabels();
+        const placedCorrect = this.calculatePlacedLabels();
+        const percentage = totalExpected > 0 ? (placedCorrect / totalExpected) * 100 : 0;
         this.progressFill.style.width = `${percentage}%`;
-        this.progressText.textContent = `Zones correct: ${correctZones} / ${totalZones}`;
-        
-        // Update correctPlacements for compatibility with existing drag and drop logic
-        // This represents the total number of correct term placements across actual zones only
-        this.correctPlacements = this.dropZones.reduce((total, zone) => {
-            if (zone.decoy) return total; // Decoy zones don't contribute to term count
-            const zoneElement = document.getElementById(zone.id);
-            if (zoneElement) {
-                const placedLabels = zoneElement.querySelectorAll('.placed-label');
-                const placedCount = placedLabels.length;
-                
-                // Check if all placed terms are accepted
-                const allTermsAccepted = Array.from(placedLabels).every(label => {
-                    const term = label.querySelector('span').textContent;
-                    return zone.acceptedTerms.includes(term);
-                });
-                
-                // Check if count meets requirements
-                const meetsMin = placedCount >= zone.minRequired;
-                const meetsMax = zone.maxAllowed === null || placedCount <= zone.maxAllowed;
-                
-                if (allTermsAccepted && meetsMin && meetsMax) {
-                    return total + placedCount;
-                }
-            }
-            return total;
-        }, 0);
+        this.progressText.textContent = `Terms correct: ${placedCorrect} / ${totalExpected}`;
+        this.correctPlacements = placedCorrect;
     }
 
     calculateCorrectZones() {
@@ -1613,6 +1566,39 @@ class DynamicDragDropActivity {
         });
         
         return correctZones;
+    }
+
+    // Total expected labels is the sum of required labels per non-decoy zone.
+    // If maxAllowed is null (unlimited), we count the number of accepted terms for that zone.
+    calculateTotalExpectedLabels() {
+        return this.dropZones.reduce((sum, zone) => {
+            if (zone.decoy) return sum;
+            // Prefer explicit maxAllowed when finite; otherwise, use number of accepted terms.
+            if (zone.maxAllowed === null) {
+                return sum + (Array.isArray(zone.acceptedTerms) ? zone.acceptedTerms.length : 0);
+            }
+            return sum + (typeof zone.maxAllowed === 'number' ? zone.maxAllowed : 0);
+        }, 0);
+    }
+
+    // Count correctly placed labels across non-decoy zones respecting max/min and accepted terms
+    calculatePlacedLabels() {
+        let placed = 0;
+        this.dropZones.forEach(zone => {
+            if (zone.decoy) return;
+            const zoneElement = document.getElementById(zone.id);
+            if (!zoneElement) return;
+            const placedLabels = Array.from(zoneElement.querySelectorAll('.placed-label'));
+            // Filter to accepted terms only
+            const acceptedPlaced = placedLabels.filter(label => {
+                const term = label.querySelector('span')?.textContent || '';
+                return zone.acceptedTerms.includes(term);
+            });
+            // Respect maxAllowed when finite
+            const cap = zone.maxAllowed === null ? Infinity : zone.maxAllowed;
+            placed += Math.min(acceptedPlaced.length, cap);
+        });
+        return placed;
     }
 
     showFeedback(message, type) {
@@ -1791,7 +1777,7 @@ class DynamicDragDropActivity {
 
         // Progress
         if (this.progressFill) this.progressFill.style.width = '0%';
-        if (this.progressText) this.progressText.textContent = 'Zones correct: 0 / 0';
+        if (this.progressText) this.progressText.textContent = 'Terms correct: 0 / 0';
 
         // Feedback (temporary banner)
         if (this.feedback) {
@@ -1894,9 +1880,7 @@ class DynamicDragDropActivity {
                 availableWidth,
                 availableHeight,
                 textWidth,
-                textHeight,
-                borderWidth,
-                removeButtonSpace
+                textHeight
             });
 
             // Ensure minimum dimensions

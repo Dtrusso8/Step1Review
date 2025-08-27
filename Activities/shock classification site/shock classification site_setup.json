@@ -3,39 +3,64 @@
   "dropZones": [
     {
       "id": "zone-0",
-      "term": "↓",
-      "x": 13.25,
-      "y": 12.27,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 13.58,
+      "y": 9.75,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1",
-      "term": "↓",
-      "x": 13.08,
-      "y": 28.93,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 13.83,
+      "y": 27.6,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703796977",
-      "term": "↓",
-      "x": 13.08,
-      "y": 80.13,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 13.58,
+      "y": 84.57,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703797319",
-      "term": "↓",
-      "x": 13,
-      "y": 64.53,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 13.67,
+      "y": 66.31,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703797671",
-      "term": "↑",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
       "x": 13.17,
       "y": 46.27,
       "width": 7,
@@ -43,7 +68,12 @@
     },
     {
       "id": "zone-1755703938065",
-      "term": "↑",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
       "x": 49,
       "y": 47.2,
       "width": 7,
@@ -51,55 +81,90 @@
     },
     {
       "id": "zone-1755703939932",
-      "term": "↑",
-      "x": 49.17,
-      "y": 81.33,
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 49.09,
+      "y": 84.74,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703940100",
-      "term": "↓",
-      "x": 48.83,
-      "y": 65.2,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 49.58,
+      "y": 66.09,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703940290",
-      "term": "↑",
-      "x": 49.17,
-      "y": 27.73,
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 49.25,
+      "y": 26.25,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703940730",
-      "term": "↑",
-      "x": 49.17,
-      "y": 12.67,
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 49.25,
+      "y": 9.71,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703943808",
-      "term": "↓",
-      "x": 36.67,
-      "y": 81.2,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 38,
+      "y": 84.46,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703943967",
-      "term": "↓",
-      "x": 37.33,
-      "y": 65.47,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 38.25,
+      "y": 65.77,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703944215",
-      "term": "↓",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
       "x": 36.67,
       "y": 47.2,
       "width": 7,
@@ -107,61 +172,96 @@
     },
     {
       "id": "zone-1755703944438",
-      "term": "↓",
-      "x": 36.75,
-      "y": 27.47,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.33,
+      "y": 26.58,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703944676",
-      "term": "↑",
-      "x": 37.17,
-      "y": 12.27,
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.5,
+      "y": 10.05,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703945058",
-      "term": "↑",
-      "x": 24.33,
-      "y": 80.67,
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 24.75,
+      "y": 84.08,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703945243",
-      "term": "↓",
-      "x": 24.83,
-      "y": 64.67,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 24.41,
+      "y": 65.71,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703945483",
-      "term": "↑",
-      "x": 25,
-      "y": 47.73,
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 24.83,
+      "y": 46.54,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703945684",
-      "term": "↑",
-      "x": 24.83,
-      "y": 29.2,
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 24.66,
+      "y": 26.83,
       "width": 7,
       "height": 10
     },
     {
       "id": "zone-1755703945928",
-      "term": "↓",
-      "x": 25.08,
-      "y": 12,
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 24.75,
+      "y": 9.93,
       "width": 7,
       "height": 10
     }
   ],
-  "savedAt": "2025-08-20T15:36:12.627Z",
-  "version": "1.0"
+  "savedAt": "2025-08-26T17:46:02.827Z",
+  "version": "2.0"
 }
