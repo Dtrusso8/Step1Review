@@ -1,0 +1,142 @@
+{
+  "activityName": "Chart",
+  "dropZones": [
+    {
+      "id": "zone-0",
+      "acceptedTerms": [
+        "Neisseria gonorrhea",
+        "Moraxella"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 2,
+      "decoy": false,
+      "x": 9.34,
+      "y": 34.12,
+      "width": 10,
+      "height": 16
+    },
+    {
+      "id": "zone-1",
+      "acceptedTerms": [
+        "Neisseria meningitidis"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 20.5,
+      "y": 34.09,
+      "width": 10,
+      "height": 8
+    },
+    {
+      "id": "zone-2",
+      "acceptedTerms": [
+        "Bordatella pertussis",
+        "Haemophilus influenza"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 2,
+      "decoy": false,
+      "x": 29.51,
+      "y": 15,
+      "width": 12,
+      "height": 10
+    },
+    {
+      "id": "zone-3",
+      "acceptedTerms": [
+        "Campylobacter jejuni"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 47.35,
+      "y": 35.88,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "zone-4",
+      "acceptedTerms": [
+        "Vibrio cholera"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 60,
+      "y": 36,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "zone-5",
+      "acceptedTerms": [
+        "Heliobacter pylori"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 71.85,
+      "y": 36.05,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "zone-6",
+      "acceptedTerms": [
+        "Pseudomonas"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 33.03,
+      "y": 73.1,
+      "width": 12,
+      "height": 7
+    },
+    {
+      "id": "zone-7",
+      "acceptedTerms": [
+        "Salmonella"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 32.8,
+      "y": 85.25,
+      "width": 8,
+      "height": 5
+    },
+    {
+      "id": "zone-8",
+      "acceptedTerms": [
+        "Shigella",
+        "Yersinia"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 2,
+      "decoy": false,
+      "x": 13.11,
+      "y": 86.37,
+      "width": 12,
+      "height": 12
+    },
+    {
+      "id": "zone-9",
+      "acceptedTerms": [
+        "E. coli",
+        "Klebsiella",
+        "Enterobacter"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 3,
+      "decoy": false,
+      "x": 45.16,
+      "y": 70.59,
+      "width": 10,
+      "height": 10
+    }
+  ],
+  "savedAt": "2025-08-27T14:51:47.463Z",
+  "version": "2.0"
+}

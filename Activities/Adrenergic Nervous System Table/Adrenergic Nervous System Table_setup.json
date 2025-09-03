@@ -1,0 +1,332 @@
+{
+  "activityName": "Adrenergic Nervous System Table",
+  "dropZones": [
+    {
+      "id": "zone-0",
+      "acceptedTerms": [
+        "Norepinephrine/Epinephrine"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 26.86,
+      "y": 20.31,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-1",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 27.01,
+      "y": 30,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-2",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 27.17,
+      "y": 39.69,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-3",
+      "acceptedTerms": [
+        "↑ (opens bronchioles)"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 26.98,
+      "y": 49.54,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-4",
+      "acceptedTerms": [
+        "↑ (dilates puils)"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 27.22,
+      "y": 58.77,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-5",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 27.53,
+      "y": 68.15,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-6",
+      "acceptedTerms": [
+        "↓ (constricts bladder sphincter)"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 27.36,
+      "y": 77.69,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-7",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 68.59,
+      "y": 39.54,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-8",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 68.33,
+      "y": 29.81,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-9",
+      "acceptedTerms": [
+        "Acetylcholine"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 68.07,
+      "y": 20.25,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-10",
+      "acceptedTerms": [
+        "α1, ꞵ2"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 46.63,
+      "y": 77.65,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-11",
+      "acceptedTerms": [
+        "α1"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 46.98,
+      "y": 58.52,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-12",
+      "acceptedTerms": [
+        "ꞵ2"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 46.81,
+      "y": 49.26,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-13",
+      "acceptedTerms": [
+        "α1, ꞵ2"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 47.15,
+      "y": 39.69,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-14",
+      "acceptedTerms": [
+        "ꞵ1"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 46.81,
+      "y": 30.28,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-15",
+      "acceptedTerms": [
+        "↓ (motility)"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 27.71,
+      "y": 86.76,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-1756312574815",
+      "acceptedTerms": [
+        "↓ (constricts bronchioles)"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 68.58,
+      "y": 49.23,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-1756312594255",
+      "acceptedTerms": [
+        "↑ (motility)"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 68.58,
+      "y": 87.19,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-1756312594558",
+      "acceptedTerms": [
+        "↑ (relaxes bladder sphincter)"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 68.32,
+      "y": 77.93,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-1756312594852",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 68.4,
+      "y": 68.21,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-1756312595244",
+      "acceptedTerms": [
+        "↓ (constricts pupils)"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 68.66,
+      "y": 58.8,
+      "width": 14,
+      "height": 9
+    },
+    {
+      "id": "zone-1756312679953",
+      "acceptedTerms": [
+        "M3"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 89.34,
+      "y": 76.85,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "zone-1756312680223",
+      "acceptedTerms": [
+        "M3"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 89.6,
+      "y": 58.64,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "zone-1756312680520",
+      "acceptedTerms": [
+        "M3"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 89.6,
+      "y": 49.07,
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "zone-1756312680880",
+      "acceptedTerms": [
+        "M2"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 89.6,
+      "y": 29.63,
+      "width": 10,
+      "height": 10
+    }
+  ],
+  "savedAt": "2025-08-27T16:47:24.819Z",
+  "version": "2.0"
+}

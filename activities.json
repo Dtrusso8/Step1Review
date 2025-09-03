@@ -1,32 +1,53 @@
 {
   "activities": [
     {
+      "name": "Adrenergic Nervous System Table",
+      "displayName": "Adrenergic Nervous System Table",
+      "image": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table.png",
+      "termsFile": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table_terms.txt",
+      "setupFile": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table_setup.json"
+    },
+    {
       "name": "FP TEAM HOORAH!",
-      "displayName": "FP TEAM HOORAH!",
+      "displayName": "Fp Team Hoorah!",
       "image": "Activities/FP TEAM HOORAH!/test.png",
       "termsFile": "Activities/FP TEAM HOORAH!/test_terms.txt",
       "setupFile": "Activities/FP TEAM HOORAH!/test_setup.json"
     },
     {
-      "name": "Chart",
-      "displayName": "Gram-negative bacteria",
-      "image": "Activities/Chart/Chart.png",
-      "termsFile": "Activities/Chart/chart_terms.txt",
-      "setupFile": "Activities/Chart/Chart_setup.json"
+      "name": "Hepatitis B serologies",
+      "displayName": "Hepatitis B Serologies",
+      "image": "Activities/Hepatitis B serologies/hepb.png",
+      "termsFile": "Activities/Hepatitis B serologies/hepb_terms.txt",
+      "setupFile": "Activities/Hepatitis B serologies/Hepatitis B serologies_setup.json"
     },
     {
-      "name": "PV Loop",
-      "displayName": "Pressure-Volume (PV) Loop",
-      "image": "Activities/Pressure-Volume (PV) Loop/PV loop.png",
-      "termsFile": "Activities/Pressure-Volume (PV) Loop/PV loop_terms.txt",
-      "setupFile": "Activities/Pressure-Volume (PV) Loop/Pressure-Volume (PV) Loop_setup.json"
+      "name": "Lung Cancer Table",
+      "displayName": "Lung Cancer Table",
+      "image": "Activities/Lung Cancer Table/Lung Cancer Table.png",
+      "termsFile": "Activities/Lung Cancer Table/Lung Cancer Table_terms.txt",
+      "setupFile": "Activities/Lung Cancer Table/Lung Cancer Table_setup.json"
     },
     {
-      "name": "pharm_mechanism of action",
-      "displayName": "Pharm_mechanism of action",
+      "name": "negative-gram bacteria",
+      "displayName": "Negative-Gram Bacteria",
+      "image": "Activities/negative-gram bacteria/Chart.png",
+      "termsFile": "Activities/negative-gram bacteria/chart_terms.txt",
+      "setupFile": "Activities/negative-gram bacteria/Chart_setup.json"
+    },
+    {
+      "name": "Pharm_mechanism of action",
+      "displayName": "Pharm Mechanism Of Action",
       "image": "Activities/Pharm_mechanism of action/pharm_mechanism of action.png",
       "termsFile": "Activities/Pharm_mechanism of action/pharm_mechanism of actions_terms.txt",
       "setupFile": "Activities/Pharm_mechanism of action/pharm_mechanism of action_setup.json"
+    },
+    {
+      "name": "Pressure-Volume (PV) Loop",
+      "displayName": "Pressure-Volume (Pv) Loop",
+      "image": "Activities/Pressure-Volume (PV) Loop/PV loop.png",
+      "termsFile": "Activities/Pressure-Volume (PV) Loop/PV loop_terms.txt",
+      "setupFile": "Activities/Pressure-Volume (PV) Loop/Pressure-Volume (PV) Loop_setup.json"
     },
     {
       "name": "shock classification site",
@@ -36,4 +57,4 @@
       "setupFile": "Activities/shock classification site/shock classification site_setup.json"
     }
   ]
-} 
+}
