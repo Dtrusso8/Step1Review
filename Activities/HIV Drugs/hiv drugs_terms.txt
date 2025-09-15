@@ -1,0 +1,16 @@
+Entry
+Reverse Transcriptase
+Integrase
+Protease
+Enfuvertide
+Raltegravir
+Elvitegravir
+Abacavir
+Didanosine
+Emtricitabine
+Tenofovir
+Ritonavir
+Idinavir
+Efavirenz
+
+

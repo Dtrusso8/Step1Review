@@ -1,0 +1,87 @@
+{
+  "activityName": "K Shifts",
+  "dropZones": [
+    {
+      "id": "zone-0",
+      "acceptedTerms": [
+        "Alkalosis"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 11.927161111111111,
+      "y": 18.611079012345677,
+      "width": 12,
+      "height": 16
+    },
+    {
+      "id": "zone-1",
+      "acceptedTerms": [
+        "β Agonist",
+        "High Insulin"
+      ],
+      "minRequired": 1,
+      "maxAllowed": null,
+      "decoy": false,
+      "x": 25.27777777777778,
+      "y": 18.73456790123457,
+      "width": 12,
+      "height": 16
+    },
+    {
+      "id": "zone-2",
+      "acceptedTerms": [
+        "β Blocker"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 26.38888888888889,
+      "y": 68.54938271604938,
+      "width": 12,
+      "height": 16
+    },
+    {
+      "id": "zone-3",
+      "acceptedTerms": [
+        "Acidosis",
+        "Low Insulin"
+      ],
+      "minRequired": 1,
+      "maxAllowed": null,
+      "decoy": false,
+      "x": 41.2153,
+      "y": 68.54938271604938,
+      "width": 12,
+      "height": 16
+    },
+    {
+      "id": "zone-4",
+      "acceptedTerms": [
+        "Cell Lysis"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 71.05902777777779,
+      "y": 68.54938271604938,
+      "width": 12,
+      "height": 16
+    },
+    {
+      "id": "zone-5",
+      "acceptedTerms": [
+        "Serum Hyperosmolality"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 85.60763888888889,
+      "y": 68.54938271604938,
+      "width": 12,
+      "height": 16
+    }
+  ],
+  "savedAt": "2025-09-08T14:56:39.579Z",
+  "version": "2.0"
+}

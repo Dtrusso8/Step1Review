@@ -8,6 +8,34 @@
       "setupFile": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table_setup.json"
     },
     {
+      "name": "Antiarrhythmic Activity",
+      "displayName": "Antiarrhythmic Activity",
+      "image": "Activities/Antiarrhythmic Activity/AA.png",
+      "termsFile": "Activities/Antiarrhythmic Activity/aa_terms.txt",
+      "setupFile": "Activities/Antiarrhythmic Activity/Antiarrhythmic Activity_setup.json"
+    },
+    {
+      "name": "Coagulation cascade",
+      "displayName": "Coagulation Cascade",
+      "image": "Activities/Coagulation cascade/Coagulation cascade.png",
+      "termsFile": "Activities/Coagulation cascade/Coagulation cascade_terms.txt",
+      "setupFile": "Activities/Coagulation cascade/Coagulation cascade_setup.json"
+    },
+    {
+      "name": "Diuretic Site of Action",
+      "displayName": "Diuretic Site Of Action",
+      "image": "Activities/Diuretic Site of Action/diarrhea.png",
+      "termsFile": "Activities/Diuretic Site of Action/diarrhea_terms.txt",
+      "setupFile": "Activities/Diuretic Site of Action/Diuretic Site of Action_setup.json"
+    },
+    {
+      "name": "FlowVolume Loops; Restrictive Obstructive Lung Disease",
+      "displayName": "Flowvolume Loops; Restrictive Obstructive Lung Disease",
+      "image": "Activities/FlowVolume Loops; Restrictive Obstructive Lung Disease/FV loops.png",
+      "termsFile": "Activities/FlowVolume Loops; Restrictive Obstructive Lung Disease/FV loops_terms.txt",
+      "setupFile": "Activities/FlowVolume Loops; Restrictive Obstructive Lung Disease/FlowVolume Loops; Restrictive Obstructive Lung Disease_setup.json"
+    },
+    {
       "name": "FP TEAM HOORAH!",
       "displayName": "Fp Team Hoorah!",
       "image": "Activities/FP TEAM HOORAH!/test.png",
@@ -15,11 +43,32 @@
       "setupFile": "Activities/FP TEAM HOORAH!/test_setup.json"
     },
     {
+      "name": "Glomerular Hemodynamics Table",
+      "displayName": "Glomerular Hemodynamics Table",
+      "image": "Activities/Glomerular Hemodynamics Table/GHT.png",
+      "termsFile": "Activities/Glomerular Hemodynamics Table/GHT_terms.txt",
+      "setupFile": "Activities/Glomerular Hemodynamics Table/Glomerular Hemodynamics Table_setup.json"
+    },
+    {
       "name": "Hepatitis B serologies",
       "displayName": "Hepatitis B Serologies",
       "image": "Activities/Hepatitis B serologies/hepb.png",
       "termsFile": "Activities/Hepatitis B serologies/hepb_terms.txt",
       "setupFile": "Activities/Hepatitis B serologies/Hepatitis B serologies_setup.json"
+    },
+    {
+      "name": "HIV Drugs",
+      "displayName": "Hiv Drugs",
+      "image": "Activities/HIV Drugs/hiv drugs.png",
+      "termsFile": "Activities/HIV Drugs/hiv drugs_terms.txt",
+      "setupFile": "Activities/HIV Drugs/HIV Drugs_setup.json"
+    },
+    {
+      "name": "K Shifts",
+      "displayName": "K Shifts",
+      "image": "Activities/K Shifts/k shifts.png",
+      "termsFile": "Activities/K Shifts/k shifts_terms.txt",
+      "setupFile": null
     },
     {
       "name": "Lung Cancer Table",

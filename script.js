@@ -6,9 +6,10 @@ class DynamicDragDropActivity {
         this.dropZones = [];
         this.currentMode = 'selection'; // Start with activity selection
         this.selectedZone = null;
-        this.correctPlacements = 0;
-        // Removed placedLabels Set - now using per-element tracking
         this.draggedElement = null;
+        // Offline FS state
+        this.isOffline = false;
+        this.offlineRootHandle = null;
         
         // New properties for student tracking
         this.studentName = '';
@@ -21,33 +22,51 @@ class DynamicDragDropActivity {
         this.teacherPassword = '0000';
         this.isTeacherModeUnlocked = false;
 
-        // Testing: allow multiple submissions (hide briefly, allow multiple)
-        // Set to false to revert to original single-submit behavior
-        this.multiSubmitTesting = true;
+        // Initialize AnswerHandler
+        this.answerHandler = new AnswerHandler(this);
         
-        // Score submission configuration for Google Form
-        this.scoreSubmissionConfig = {
-            enabled: true,
-            googleFormUrl: 'https://script.google.com/macros/s/AKfycbyw0AR6itqy6CrvoOYrzyDwg1EawucJ2Oj06-i032QC_FKREzj7qE5vrHvSfdrxpsvL/exec',
-            fallback: {
-                showInConsole: true,
-                createDownloadableReport: true,
-                showAlert: false
-            }
-        };
-        
-        // Initialize score submission configuration
-        this.initializeScoreSubmission();
+        // Initialize TextFitting
+        this.textFitting = new TextFitting(this.dropZones);
         
         this.initializeElements();
         this.loadActivities();
         this.setupEventListeners();
     }
 
+    // ----- Offline File System Access helpers -----
+    async pickOfflineRoot() {
+        if (!window.showDirectoryPicker) throw new Error('Browser not supported');
+        this.offlineRootHandle = await window.showDirectoryPicker({ mode: 'read' });
+        this.isOffline = true;
+    }
+
+    async readTextFileViaFS(path) {
+        if (!this.offlineRootHandle) throw new Error('No offline folder selected');
+        const handle = await this.getFileHandleByPath(path);
+        const file = await handle.getFile();
+        return await file.text();
+    }
+
+    async getFileHandleByPath(path) {
+        const segments = path.split('/').filter(Boolean);
+        let dir = this.offlineRootHandle;
+        for (let i = 0; i < segments.length; i++) {
+            const name = segments[i];
+            const last = i === segments.length - 1;
+            if (last) {
+                return await dir.getFileHandle(name);
+            } else {
+                dir = await dir.getDirectoryHandle(name);
+            }
+        }
+        throw new Error(`Invalid path: ${path}`);
+    }
+
     initializeElements() {
         // Activity selection elements
         this.activitySelector = document.getElementById('activity-selector');
         this.loadActivityBtn = document.getElementById('load-activity-btn');
+        this.selectOfflineFolderBtn = document.getElementById('select-offline-folder-btn');
         this.studentNameInput = document.getElementById('student-name');
         
         // Teacher mode elements
@@ -69,7 +88,6 @@ class DynamicDragDropActivity {
         
         // Zone configuration elements
         this.zoneConfig = document.getElementById('zone-config');
-        this.zoneDecoy = document.getElementById('zone-decoy');
         this.zoneAcceptedTerms = document.getElementById('zone-accepted-terms');
         this.zoneMinRequired = document.getElementById('zone-min-required');
         this.zoneMaxAllowed = document.getElementById('zone-max-allowed');
@@ -117,7 +135,15 @@ class DynamicDragDropActivity {
         try {
             // Load activities using the ActivityLoader
             const loader = new ActivityLoader();
-            this.activities = await loader.scanActivitiesFolder();
+            // If not offline, use default flow
+            if (!this.isOffline) {
+                this.activities = await loader.scanActivitiesFolder();
+            } else {
+                // Offline: read activities.json from selected folder
+                const text = await this.readTextFileViaFS('activities.json');
+                const data = JSON.parse(text);
+                this.activities = Array.isArray(data.activities) ? data.activities : [];
+            }
             
             this.populateActivitySelector();
             
@@ -141,6 +167,19 @@ class DynamicDragDropActivity {
     setupEventListeners() {
         // Activity selection
         this.loadActivityBtn.addEventListener('click', () => this.loadSelectedActivity());
+        // Offline button
+        if (this.selectOfflineFolderBtn) {
+            this.selectOfflineFolderBtn.addEventListener('click', async () => {
+                try {
+                    await this.pickOfflineRoot();
+                    await this.loadActivities();
+                    this.showFeedback('Offline folder selected. Activities loaded from disk.', 'success');
+                } catch (e) {
+                    console.error('Offline selection failed:', e);
+                    this.showFeedback('Select the folder containing index.html and activities.json', 'error');
+                }
+            });
+        }
         
         // Teacher mode
         this.addZoneBtn.addEventListener('click', () => this.addDropZone());
@@ -161,14 +200,13 @@ class DynamicDragDropActivity {
         this.resizeAllZonesBtn.addEventListener('click', () => this.resizeAllZones());
         
         // New zone configuration UI elements
-        this.zoneDecoy.addEventListener('change', () => this.updateZoneConfigUI());
         this.zoneUnlimited.addEventListener('change', () => this.handleUnlimitedChange());
         
         // Student mode
         this.startActivityBtn.addEventListener('click', () => this.startActivity());
         this.backToTeacherBtn.addEventListener('click', () => this.showTeacherMode());
         this.resetBtn.addEventListener('click', () => this.resetActivity());
-        this.submitScoreBtn.addEventListener('click', () => this.submitScore());
+        this.submitScoreBtn.addEventListener('click', () => this.answerHandler.submitScore());
         this.backToSelectionStudentBtn.addEventListener('click', () => this.backToSelectionFromStudent());
         
         // Password modal
@@ -191,11 +229,11 @@ class DynamicDragDropActivity {
                     if (this.currentMode === 'teacher') {
                         this.renderDropZones();
                         // Refit text after re-rendering teacher zones
-                        this.fitAllPlacedLabels();
+                        this.textFitting.fitAllPlacedLabels(this.activityDropZones);
                     } else if (this.currentMode === 'student') {
                         this.createActivityDropZones();
                         // Refit text after re-rendering student zones
-                        this.fitAllPlacedLabels();
+                        this.textFitting.fitAllPlacedLabels(this.activityDropZones);
                     }
                 }, 150); // Slightly longer delay to ensure resize is complete
             }
@@ -239,9 +277,21 @@ class DynamicDragDropActivity {
 
         // Load terms and setup data for the selected activity
         try {
-            const loader = new ActivityLoader();
-            this.currentActivity.terms = await loader.loadTermsForActivity(this.currentActivity);
-            this.currentActivity.setup = await loader.loadSetupForActivity(this.currentActivity);
+            if (this.isOffline) {
+                // Offline: read via FS API
+                const termsText = await this.readTextFileViaFS(this.currentActivity.termsFile);
+                this.currentActivity.terms = termsText.split('\n').map(t => t.trim()).filter(t => t.length > 0);
+                try {
+                    const setupText = await this.readTextFileViaFS(this.currentActivity.setupFile);
+                    this.currentActivity.setup = JSON.parse(setupText);
+                } catch (_) {
+                    this.currentActivity.setup = { dropZones: [] };
+                }
+            } else {
+                const loader = new ActivityLoader();
+                this.currentActivity.terms = await loader.loadTermsForActivity(this.currentActivity);
+                this.currentActivity.setup = await loader.loadSetupForActivity(this.currentActivity);
+            }
             console.log('Loaded activity data:', this.currentActivity);
         } catch (error) {
             console.error('Error loading activity data:', error);
@@ -278,6 +328,11 @@ class DynamicDragDropActivity {
         document.getElementById('activity-selection').style.display = 'none';
         this.teacherMode.style.display = 'block';
         this.studentMode.style.display = 'none';
+        
+        // Hide student containers
+        document.getElementById('student-activity-title').style.display = 'none';
+        document.getElementById('student-controls-container').style.display = 'none';
+        document.getElementById('student-info-container').style.display = 'none';
         
         // Show the image section for teacher mode
         document.getElementById('activity-image-section').style.display = 'block';
@@ -316,7 +371,10 @@ class DynamicDragDropActivity {
         document.getElementById('activity-selection').style.display = 'none';
         this.teacherMode.style.display = 'none';
         
-        // Show student mode
+        // Show student containers and student mode
+        document.getElementById('student-activity-title').style.display = 'block';
+        document.getElementById('student-controls-container').style.display = 'block';
+        document.getElementById('student-info-container').style.display = 'block';
         this.studentMode.style.display = 'block';
         
         // Set up student mode content
@@ -325,7 +383,6 @@ class DynamicDragDropActivity {
         
         // Display student name
         this.displayStudentName.textContent = this.studentName;
-        this.studentInfo.style.display = 'flex';
         
         // Ensure image is loaded before positioning zones
         this.activityImageDisplay.onload = () => {
@@ -360,7 +417,7 @@ class DynamicDragDropActivity {
                 
                 console.log('Student mode setup complete');
                 // Ensure progress shows term-based totals immediately on load
-                this.updateProgress();
+                this.answerHandler.updateProgress();
             }, 100); // Small delay to ensure image is fully rendered
         };
     }
@@ -371,7 +428,10 @@ class DynamicDragDropActivity {
         this.teacherMode.style.display = 'none';
         this.studentMode.style.display = 'none';
         
-        // Hide the image section on selection page
+        // Hide student containers and image section on selection page
+        document.getElementById('student-activity-title').style.display = 'none';
+        document.getElementById('student-controls-container').style.display = 'none';
+        document.getElementById('student-info-container').style.display = 'none';
         document.getElementById('activity-image-section').style.display = 'none';
         
         // Clear current activity
@@ -464,7 +524,6 @@ class DynamicDragDropActivity {
                     acceptedTerms: [],
                     minRequired: 1,
                     maxAllowed: 1,
-                    decoy: false,
                     x: 20 + (index * 15),
                     y: 20 + (index * 10),
                     width: 15,
@@ -483,6 +542,9 @@ class DynamicDragDropActivity {
         // Ensure zones are properly synchronized between modes
         this.synchronizeZonePositions();
         
+        // Update text fitting with current drop zones
+        this.textFitting.updateDropZones(this.dropZones);
+        
         if (!skipRender) this.renderDropZones();
     }
 
@@ -494,7 +556,6 @@ class DynamicDragDropActivity {
                 zone.acceptedTerms = zone.term ? [zone.term] : [];
                 zone.minRequired = 1;
                 zone.maxAllowed = 1;
-                zone.decoy = false;
                 
                 // Remove legacy property
                 delete zone.term;
@@ -506,7 +567,6 @@ class DynamicDragDropActivity {
             if (!zone.acceptedTerms) zone.acceptedTerms = [];
             if (zone.minRequired === undefined) zone.minRequired = 1;
             if (zone.maxAllowed === undefined) zone.maxAllowed = 1;
-            if (zone.decoy === undefined) zone.decoy = false;
         });
     }
 
@@ -616,6 +676,14 @@ class DynamicDragDropActivity {
         if (isSetup) {
             zoneElement.addEventListener('click', () => this.selectZone(zone));
             this.makeZoneDraggable(zoneElement, zone);
+            
+            // Add resize handle for teacher mode
+            const resizeHandle = document.createElement('div');
+            resizeHandle.className = 'resize-handle';
+            zoneElement.appendChild(resizeHandle);
+            
+            // Make resize handle functional
+            this.makeZoneResizable(zoneElement, zone, resizeHandle);
         } else {
             // Create container for placed labels
             const placedLabelsContainer = document.createElement('div');
@@ -632,59 +700,17 @@ class DynamicDragDropActivity {
         return zoneElement;
     }
 
-    layoutPlacedLabels(zoneElement, zone) {
-        const container = zoneElement.querySelector('.placed-labels');
-        if (!container) return;
-        
-        // Determine if this is a multi-term zone
-        const isMultiTermZone = zone.maxAllowed === null || zone.maxAllowed > 1;
-        
-        if (isMultiTermZone) {
-            // For multi-term zones: use grid layout
-            const placed = container.querySelectorAll('.placed-label').length;
-            const rows = Math.max(1, zone.maxAllowed || placed);
-            
-            console.log(`Grid layout for zone ${zone.id}: ${placed} labels, ${rows} rows, maxAllowed: ${zone.maxAllowed}`);
-            
-            container.style.setProperty('--rows', rows);
-            container.classList.add('grid-layout');
-            
-            // After setting up the grid, refit all labels to their cells
-            setTimeout(() => {
-                // Log the actual grid cell dimensions
-                const firstLabel = container.querySelector('.placed-label');
-                if (firstLabel) {
-                    const cellWidth = firstLabel.clientWidth;
-                    const cellHeight = firstLabel.clientHeight;
-                    console.log(`Grid cell dimensions: ${cellWidth}x${cellHeight}px`);
-                }
-                
-                container.querySelectorAll('.placed-label').forEach(pl => {
-                    this.fitLabelToZone(pl, pl); // Use individual cell dimensions
-                });
-            }, 10);
-        } else {
-            // For single-term zones: no grid, just center the label
-            console.log(`Single-term layout for zone ${zone.id}: no grid needed`);
-            
-            container.style.removeProperty('--rows');
-            container.classList.remove('grid-layout');
-            
-            // Refit the label to the entire zone size
-            setTimeout(() => {
-                const label = container.querySelector('.placed-label');
-                if (label) {
-                    this.fitLabelToZone(label, zoneElement); // Use entire zone dimensions
-                }
-            }, 10);
-        }
-    }
 
     makeZoneDraggable(zoneElement, zone) {
         let isDragging = false;
         let startX, startY, startLeft, startTop;
 
         zoneElement.addEventListener('mousedown', (e) => {
+            // Don't start dragging if clicking on the resize handle
+            if (e.target.classList.contains('resize-handle')) {
+                return;
+            }
+            
             if (e.target === zoneElement) {
                 isDragging = true;
                 startX = e.clientX;
@@ -740,6 +766,78 @@ class DynamicDragDropActivity {
         });
     }
 
+    makeZoneResizable(zoneElement, zone, resizeHandle) {
+        let isResizing = false;
+        let startX, startY, startWidth, startHeight;
+
+        resizeHandle.addEventListener('mousedown', (e) => {
+            e.stopPropagation(); // Prevent zone selection when clicking resize handle
+            isResizing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = zone.width;
+            startHeight = zone.height;
+            
+            resizeHandle.style.cursor = 'nw-resize';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+            
+            // Get the actual image element for precise sizing
+            const imageElement = this.activityImage; // Always use teacher mode image for resizing
+            const imageRect = imageElement.getBoundingClientRect();
+            
+            // Ensure we have valid dimensions
+            if (imageRect.width === 0 || imageRect.height === 0) {
+                return;
+            }
+            
+            // Calculate new size as percentages relative to the actual image
+            const deltaWidthPercent = (deltaX / imageRect.width) * 100;
+            const deltaHeightPercent = (deltaY / imageRect.height) * 100;
+            
+            const newWidth = startWidth + deltaWidthPercent;
+            const newHeight = startHeight + deltaHeightPercent;
+            
+            // Constrain to reasonable limits (5% to 50%)
+            const constrainedWidth = Math.max(5, Math.min(50, newWidth));
+            const constrainedHeight = Math.max(5, Math.min(50, newHeight));
+            
+            // Ensure zones don't extend beyond image boundaries
+            const maxWidth = 100 - zone.x;
+            const maxHeight = 100 - zone.y;
+            const finalWidth = Math.min(constrainedWidth, maxWidth);
+            const finalHeight = Math.min(constrainedHeight, maxHeight);
+            
+            // Update zone size
+            zone.width = finalWidth;
+            zone.height = finalHeight;
+            
+            // Update visual representation
+            zoneElement.style.width = `${finalWidth}%`;
+            zoneElement.style.height = `${finalHeight}%`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                resizeHandle.style.cursor = 'nw-resize';
+                this.saveDropZones();
+                
+                // Update configuration form if this zone is currently selected
+                if (this.selectedZone && this.selectedZone.id === zone.id) {
+                    this.zoneWidth.value = zone.width;
+                    this.zoneHeight.value = zone.height;
+                }
+            }
+        });
+    }
+
     selectZone(zone) {
         // Deselect previous zone
         if (this.selectedZone) {
@@ -752,7 +850,6 @@ class DynamicDragDropActivity {
         if (zoneElement) zoneElement.classList.add('selected');
         
         // Populate configuration form with zone data
-        this.zoneDecoy.checked = zone.decoy;
         this.zoneMinRequired.value = zone.minRequired;
         
         // Handle maxAllowed and unlimited checkbox
@@ -773,8 +870,6 @@ class DynamicDragDropActivity {
         this.zoneWidth.value = zone.width;
         this.zoneHeight.value = zone.height;
         
-        // Update UI state based on decoy setting
-        this.updateZoneConfigUI();
         
         this.zoneConfig.style.display = 'block';
     }
@@ -786,14 +881,6 @@ class DynamicDragDropActivity {
         });
     }
 
-    updateZoneConfigUI() {
-        const isDecoy = this.zoneDecoy.checked;
-        if (isDecoy) {
-            this.zoneConfigFields.classList.add('disabled');
-        } else {
-            this.zoneConfigFields.classList.remove('disabled');
-        }
-    }
 
     addDropZone() {
         const newZone = {
@@ -828,20 +915,18 @@ class DynamicDragDropActivity {
         // Get other configuration values
         const minRequired = parseInt(this.zoneMinRequired.value);
         const maxAllowed = this.zoneUnlimited.checked ? null : parseInt(this.zoneMaxAllowed.value);
-        const decoy = this.zoneDecoy.checked;
-        
         // Validate configuration
-        if (!decoy && acceptedTerms.length === 0) {
-            this.showFeedback('Please select at least one accepted term for non-decoy zones.', 'error');
+        if (acceptedTerms.length === 0) {
+            this.showFeedback('Please select at least one accepted term for this zone.', 'error');
             return;
         }
         
-        if (!decoy && minRequired < 0) {
+        if (minRequired < 0) {
             this.showFeedback('Minimum required labels cannot be negative.', 'error');
             return;
         }
         
-        if (!decoy && maxAllowed !== null && maxAllowed < minRequired) {
+        if (maxAllowed !== null && maxAllowed < minRequired) {
             this.showFeedback('Maximum allowed labels must be greater than or equal to minimum required.', 'error');
             return;
         }
@@ -850,7 +935,6 @@ class DynamicDragDropActivity {
         this.selectedZone.acceptedTerms = acceptedTerms;
         this.selectedZone.minRequired = minRequired;
         this.selectedZone.maxAllowed = maxAllowed;
-        this.selectedZone.decoy = decoy;
         this.selectedZone.x = parseFloat(this.zoneX.value);
         this.selectedZone.y = parseFloat(this.zoneY.value);
         this.selectedZone.width = parseFloat(this.zoneWidth.value);
@@ -951,7 +1035,6 @@ class DynamicDragDropActivity {
                 acceptedTerms: zone.acceptedTerms,
                 minRequired: zone.minRequired,
                 maxAllowed: zone.maxAllowed,
-                decoy: zone.decoy,
                 x: zone.x,
                 y: zone.y,
                 width: zone.width,
@@ -1011,8 +1094,8 @@ class DynamicDragDropActivity {
         const errors = [];
         
         this.dropZones.forEach(zone => {
-            if (zone.decoy) {
-                // Decoy zones don't need validation
+            // Skip zones with no accepted terms (blank zones)
+            if (!zone.acceptedTerms || zone.acceptedTerms.length === 0) {
                 return;
             }
             
@@ -1077,8 +1160,7 @@ class DynamicDragDropActivity {
         this.startTimer();
         
         // Reset activity state
-        this.correctPlacements = 0;
-        // Removed placedLabels.clear() - no longer using Set
+        this.answerHandler.reset();
         this.isActivityActive = true;
         
         // Enable dragging on all labels
@@ -1091,34 +1173,34 @@ class DynamicDragDropActivity {
         // Hide the start activity button
         this.startActivityBtn.style.display = 'none';
         
+        // Show submit button (can submit at any time now)
+        this.answerHandler.showSubmitButton();
+        
         console.log('Setting up drag and drop...');
         this.setupDragAndDrop();
         
         console.log('Updating progress...');
-        this.updateProgress();
+        this.answerHandler.updateProgress();
         
         // Show success feedback
-        this.showFeedback('🎯 Activity started! Drag the labels to the correct zones.', 'success');
+        this.showFeedback('🎯 Activity started! Drag the labels to the correct zones. You can submit at any time.', 'success');
     }
 
     createActivityDropZones() {
         this.activityDropZones.innerHTML = '';
         
         this.dropZones.forEach(zone => {
-            if (zone.acceptedTerms.length > 0 || zone.decoy) { // Create zones that have terms assigned or are decoy zones
-                const el = this.createZoneElement(zone, false);
-                this.layoutPlacedLabels(el, zone);
-            }
+            // Create all zones, including blank zones (zones with no accepted terms)
+            const el = this.createZoneElement(zone, false);
+            this.textFitting.layoutPlacedLabels(el, zone);
         });
         
         // After all zones are created, ensure they're all properly laid out
         setTimeout(() => {
             this.dropZones.forEach(zone => {
-                if (zone.acceptedTerms.length > 0 || zone.decoy) {
-                    const zoneElement = document.getElementById(zone.id);
-                    if (zoneElement) {
-                        this.layoutPlacedLabels(zoneElement, zone);
-                    }
+                const zoneElement = document.getElementById(zone.id);
+                if (zoneElement) {
+                    this.textFitting.layoutPlacedLabels(zoneElement, zone);
                 }
             });
         }, 50);
@@ -1127,15 +1209,24 @@ class DynamicDragDropActivity {
     createDraggableLabels() {
         this.labelsContainer.innerHTML = '<h3>Terms to Place:</h3>';
 
-        // Count how many zones expect each term (only from non-decoy zones)
+        // Count how many zones expect each term (only from non-blank zones)
         const counts = {};
         this.dropZones
-            .filter(zone => !zone.decoy) // Only count terms from non-decoy zones
+            .filter(zone => zone.acceptedTerms && zone.acceptedTerms.length > 0) // Only count terms from non-blank zones
             .flatMap(z => z.acceptedTerms)
             .forEach(term => { counts[term] = (counts[term] || 0) + 1; });
 
+        // Convert to array and randomize the order of terms
+        const termsArray = Object.entries(counts);
+        
+        // Fisher-Yates shuffle algorithm for true randomization
+        for (let i = termsArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [termsArray[i], termsArray[j]] = [termsArray[j], termsArray[i]];
+        }
+
         // Build one tile per unique term. If count > 1, it becomes multi-use.
-        Object.entries(counts).forEach(([term, count]) => {
+        termsArray.forEach(([term, count]) => {
             const label = document.createElement('div');
             label.className = 'draggable-label';
             label.draggable = false; // enabled on Start
@@ -1170,7 +1261,7 @@ class DynamicDragDropActivity {
             zone.addEventListener('dragover', (e) => this.handleDragOver(e));
             zone.addEventListener('dragenter', (e) => this.handleDragEnter(e));
             zone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
-            zone.addEventListener('drop', (e) => this.handleDrop(e));
+            zone.addEventListener('drop', (e) => this.answerHandler.handleDrop(e));
         });
     }
 
@@ -1223,171 +1314,6 @@ class DynamicDragDropActivity {
         e.target.classList.remove('highlight');
     }
 
-    handleDrop(e) {
-        e.preventDefault();
-        e.target.classList.remove('highlight');
-
-        if (!this.draggedElement) return;
-
-        const labelType = this.draggedElement.dataset.label;
-        const zoneElement = e.target.closest('.drop-zone');
-        
-        if (!zoneElement) return;
-        
-        const zoneId = zoneElement.dataset.zoneId;
-        const zone = this.dropZones.find(z => z.id === zoneId);
-        
-        if (!zone) return;
-
-        if (this.draggedElement.classList.contains('placed')) {
-            this.showFeedback('This label has already been placed!', 'error');
-            return;
-        }
-
-        // Check if this is a decoy zone
-        if (zone.decoy) {
-            this.showFeedback('This is a decoy zone - no labels can be placed here!', 'error');
-            return;
-        }
-
-        // Check if the term is accepted in this zone
-        if (!zone.acceptedTerms.includes(labelType)) {
-            this.showFeedback(`Incorrect! ${labelType} doesn't belong in this zone.`, 'error');
-            return;
-        }
-
-        // Check if zone has reached maximum capacity
-        const placedLabels = zoneElement.querySelectorAll('.placed-label');
-        const currentCount = placedLabels.length;
-        
-        if (zone.maxAllowed !== null && currentCount >= zone.maxAllowed) {
-            this.showFeedback(`Maximum ${zone.maxAllowed} labels allowed in this zone.`, 'error');
-            return;
-        }
-
-        // Handle correct placement
-        this.handleCorrectPlacement(zoneElement, this.draggedElement, zone);
-    }
-
-    handleCorrectPlacement(dropZone, label, zone) {
-        // Make a placed copy for the zone
-        const placedLabel = label.cloneNode(true);
-        placedLabel.classList.remove('dragging');
-        placedLabel.classList.add('placed-label');
-        placedLabel.draggable = false;
-
-        // A multi-use sidebar tile shows a count badge; strip it from the placed copy
-        const badge = placedLabel.querySelector('.count-badge');
-        if (badge) badge.remove();
-
-        // mark the text span so CSS can target it
-        const txt = placedLabel.querySelector('span');
-        if (txt) txt.classList.add('label-text');
-
-        // Add remove button (overlay, not in flow)
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'remove-label-btn';
-        removeBtn.textContent = '✕';
-        removeBtn.addEventListener('click', () => this.removePlacedLabel(placedLabel, label, zone));
-        placedLabel.appendChild(removeBtn);
-
-        // Add to the placed labels container
-        const placedLabelsContainer = dropZone.querySelector('.placed-labels');
-        placedLabelsContainer.appendChild(placedLabel);
-        
-        // Layout rows + fit the label to *its own cell*
-        this.layoutPlacedLabels(dropZone, zone);
-        
-        // The layoutPlacedLabels method now handles refitting all labels
-        // so we don't need to call fitLabelToZone here separately
-
-        // Update zone appearance
-        dropZone.classList.add('correct', 'correct-placement');
-
-        const isMulti = label.dataset.multi === 'true';
-        if (isMulti) {
-            // Decrement remaining, disable tile when it hits zero
-            let remaining = parseInt(label.dataset.remaining || '0', 10);
-            remaining = Math.max(0, remaining - 1);
-            label.dataset.remaining = String(remaining);
-            const tileBadge = label.querySelector('.count-badge');
-            if (tileBadge) tileBadge.textContent = String(remaining);
-            if (remaining === 0) {
-                label.classList.add('placed');
-                label.draggable = false;
-            }
-        } else {
-            // Single-use tiles are consumed after a correct placement
-            label.classList.add('placed');
-            label.draggable = false;
-        }
-
-        this.correctPlacements++;
-        this.updateProgress();
-
-        this.showFeedback(`Correct! ${label.querySelector('span').textContent} is in the right place!`, 'success');
-
-        // Check if all zones are complete
-        if (this.checkAllZonesComplete()) {
-            this.completeActivity();
-        }
-
-        setTimeout(() => {
-            dropZone.classList.remove('correct-placement');
-        }, 500);
-    }
-
-    removePlacedLabel(placedLabel, originalLabel, zone) {
-        // Remove the placed label
-        placedLabel.remove();
-        
-        // Update zone appearance
-        const dropZone = placedLabel.closest('.drop-zone');
-        if (dropZone) {
-            dropZone.classList.remove('correct');
-            this.layoutPlacedLabels(dropZone, zone);
-        }
-        
-        // Restore the original label if it was bounded
-        if (originalLabel.dataset.multi === 'true') {
-            let remaining = parseInt(originalLabel.dataset.remaining || '0', 10);
-            remaining = Math.min(remaining + 1, this.dropZones.filter(z => z.acceptedTerms.includes(originalLabel.dataset.label)).length);
-            originalLabel.dataset.remaining = String(remaining);
-            
-            const tileBadge = originalLabel.querySelector('.count-badge');
-            if (tileBadge) tileBadge.textContent = String(remaining);
-            
-            if (remaining > 0) {
-                originalLabel.classList.remove('placed');
-                originalLabel.draggable = true;
-            }
-        } else {
-            // Single-use tiles are restored
-            originalLabel.classList.remove('placed');
-            originalLabel.draggable = true;
-        }
-        
-        // Update progress
-        this.correctPlacements = Math.max(0, this.correctPlacements - 1);
-        this.updateProgress();
-        
-        this.showFeedback(`Removed ${originalLabel.querySelector('span').textContent} from zone.`, 'info');
-    }
-
-    completeActivity() {
-        // Stop the timer
-        this.stopTimer();
-        this.isActivityActive = false;
-        
-        // Show completion message
-        setTimeout(() => {
-            this.showFeedback('🎉 Congratulations! You\'ve completed the activity! 🎉', 'complete');
-            
-            // Show submit button
-            this.submitScoreBtn.style.display = 'inline-block';
-        }, 1000);
-    }
-
     startTimer() {
         this.activityStartTime = new Date();
         this.timerDisplay.textContent = '00:00';
@@ -1416,191 +1342,6 @@ class DynamicDragDropActivity {
         return Math.floor((endTime - this.activityStartTime) / 1000);
     }
 
-    submitScore() {
-        // Calculate score based on total expected labels (exclude decoy zones)
-        const totalExpectedLabels = this.calculateTotalExpectedLabels();
-        const placedCorrectLabels = this.calculatePlacedLabels();
-        const percentage = totalExpectedLabels > 0
-            ? Math.round((placedCorrectLabels / totalExpectedLabels) * 100)
-            : 0;
-        
-        const scoreData = {
-            studentName: this.studentName,
-            assignmentName: this.currentActivity.displayName,
-            score: placedCorrectLabels,
-            totalLabels: totalExpectedLabels,
-            percentage: percentage,
-            timer: this.getActivityDuration(),
-            timeSubmitted: new Date().toISOString(),
-            activityName: this.currentActivity.name,
-            activityStartTime: this.activityStartTime ? this.activityStartTime.toISOString() : null,
-            activityEndTime: this.activityEndTime ? this.activityEndTime.toISOString() : null,
-            completedAt: new Date().toISOString(),
-            durationFormatted: `${Math.floor(this.getActivityDuration() / 60)}:${(this.getActivityDuration() % 60).toString().padStart(2, '0')}`
-        };
-
-        // Optional: brief banner is fine, but not required
-        this.showFeedback(
-            `Submitting: ${scoreData.score}/${scoreData.totalLabels} terms correct (${scoreData.percentage}%) in ${scoreData.durationFormatted}`,
-            'success'
-        );
-
-        // Send to Google Sheet
-        this.submitToGoogleSheet(scoreData.studentName, scoreData.score, scoreData.timer);
-
-        // PERMANENT confirmation near the button
-        this.showSubmissionStatus({
-            studentName: scoreData.studentName,
-            timeSubmittedISO: scoreData.timeSubmitted,
-            durationFormatted: scoreData.durationFormatted
-        });
-
-        // Disable/hide behavior based on testing flag
-        if (!this.multiSubmitTesting) {
-            // Original behavior: disable to prevent double submission
-            this.submitScoreBtn.disabled = true;
-            this.submitScoreBtn.textContent = 'Score Submitted';
-        } else {
-            // Testing behavior: briefly hide then re-enable for repeated submits
-            const btn = this.submitScoreBtn;
-            btn.style.display = 'none';
-            setTimeout(() => {
-                btn.style.display = 'inline-block';
-                btn.disabled = false;
-                btn.textContent = 'Submit Score';
-            }, 1000);
-        }
-
-        // Local fallback + download
-        this.handleScoreSubmissionFallback(scoreData);
-    }
-
-    submitToGoogleSheet(studentName, quizScore, duration) {
-        // Calculate percentage based on total expected labels (exclude decoy zones)
-        const totalExpectedLabels = this.calculateTotalExpectedLabels();
-        const percentage = totalExpectedLabels > 0
-            ? Math.round((quizScore / totalExpectedLabels) * 100)
-            : 0;
-        
-        // Convert duration from seconds to minutes
-        const durationMinutes = Math.round((duration / 60) * 100) / 100; // Round to 2 decimal places
-        
-        // Set the form values
-        document.getElementById('formName').value = studentName;
-        document.getElementById('formAssignmentName').value = this.currentActivity.displayName;
-        document.getElementById('formTimeSubmitted').value = new Date().toISOString();
-        document.getElementById('formScore').value = quizScore;
-        document.getElementById('formPercentage').value = percentage;
-        document.getElementById('formDuration').value = durationMinutes;
-        
-        // Debug: Log what we're setting
-        console.log('Setting form values:');
-        console.log('- name:', studentName);
-        console.log('- assignmentName:', this.currentActivity.displayName);
-        console.log('- timeSubmitted:', new Date().toISOString());
-        console.log('- score:', quizScore);
-        console.log('- percentage:', percentage);
-        console.log('- duration:', durationMinutes);
-        
-        // Submit the form
-        document.getElementById('googleSheetForm').submit();
-        
-        // Optional: Show success message
-        console.log('Quiz results sent to Google Sheets!');
-        console.log('Data sent:', {
-            name: studentName,
-            assignmentName: this.currentActivity.displayName,
-            timeSubmitted: new Date().toISOString(),
-            score: quizScore,
-            percentage: percentage,
-            duration: durationMinutes
-        });
-    }
-
-    handleIncorrectPlacement(dropZone, label) {
-        dropZone.classList.add('incorrect');
-        this.showFeedback(`Incorrect! ${label.querySelector('span').textContent} doesn't belong there.`, 'error');
-
-        setTimeout(() => {
-            dropZone.classList.remove('incorrect');
-        }, 500);
-    }
-
-    updateProgress() {
-        // Term-level progress across non-decoy zones
-        const totalExpected = this.calculateTotalExpectedLabels();
-        const placedCorrect = this.calculatePlacedLabels();
-        const percentage = totalExpected > 0 ? (placedCorrect / totalExpected) * 100 : 0;
-        this.progressFill.style.width = `${percentage}%`;
-        this.progressText.textContent = `Terms correct: ${placedCorrect} / ${totalExpected}`;
-        this.correctPlacements = placedCorrect;
-    }
-
-    calculateCorrectZones() {
-        // Count correct zones for actual drop zones only (exclude decoy zones)
-        let correctZones = 0;
-        
-        this.dropZones.forEach(zone => {
-            if (!zone.decoy) { // Only count non-decoy zones
-                // Regular zones are correct when they meet requirements
-                const zoneElement = document.getElementById(zone.id);
-                if (zoneElement) {
-                    const placedLabels = zoneElement.querySelectorAll('.placed-label');
-                    const placedCount = placedLabels.length;
-                    
-                    // Check if all placed terms are accepted
-                    const allTermsAccepted = Array.from(placedLabels).every(label => {
-                        const term = label.querySelector('span').textContent;
-                        return zone.acceptedTerms.includes(term);
-                    });
-                    
-                    // Check if count meets requirements
-                    const meetsMin = placedCount >= zone.minRequired;
-                    const meetsMax = zone.maxAllowed === null || placedCount <= zone.maxAllowed;
-                    
-                    if (allTermsAccepted && meetsMin && meetsMax) {
-                        correctZones++;
-                    }
-                }
-            }
-        });
-        
-        return correctZones;
-    }
-
-    // Total expected labels is the sum of required labels per non-decoy zone.
-    // If maxAllowed is null (unlimited), we count the number of accepted terms for that zone.
-    calculateTotalExpectedLabels() {
-        return this.dropZones.reduce((sum, zone) => {
-            if (zone.decoy) return sum;
-            // Prefer explicit maxAllowed when finite; otherwise, use number of accepted terms.
-            if (zone.maxAllowed === null) {
-                return sum + (Array.isArray(zone.acceptedTerms) ? zone.acceptedTerms.length : 0);
-            }
-            return sum + (typeof zone.maxAllowed === 'number' ? zone.maxAllowed : 0);
-        }, 0);
-    }
-
-    // Count correctly placed labels across non-decoy zones respecting max/min and accepted terms
-    calculatePlacedLabels() {
-        let placed = 0;
-        this.dropZones.forEach(zone => {
-            if (zone.decoy) return;
-            const zoneElement = document.getElementById(zone.id);
-            if (!zoneElement) return;
-            const placedLabels = Array.from(zoneElement.querySelectorAll('.placed-label'));
-            // Filter to accepted terms only
-            const acceptedPlaced = placedLabels.filter(label => {
-                const term = label.querySelector('span')?.textContent || '';
-                return zone.acceptedTerms.includes(term);
-            });
-            // Respect maxAllowed when finite
-            const cap = zone.maxAllowed === null ? Infinity : zone.maxAllowed;
-            placed += Math.min(acceptedPlaced.length, cap);
-        });
-        return placed;
-    }
-
     showFeedback(message, type) {
         this.feedback.textContent = message;
         this.feedback.className = `feedback ${type}`;
@@ -1618,8 +1359,7 @@ class DynamicDragDropActivity {
             this.isActivityActive = false;
         }
         
-        this.correctPlacements = 0;
-        // Removed placedLabels.clear() - no longer using Set
+        this.answerHandler.reset();
 
         const draggableLabels = this.labelsContainer.querySelectorAll('.draggable-label');
         draggableLabels.forEach(label => {
@@ -1628,7 +1368,7 @@ class DynamicDragDropActivity {
             
             // Reset multi-use tiles to their original count
             if (label.dataset.multi === 'true') {
-                const originalCount = this.dropZones.filter(z => !z.decoy && z.acceptedTerms.includes(label.dataset.label)).length;
+                const originalCount = this.dropZones.filter(z => z.acceptedTerms && z.acceptedTerms.length > 0 && z.acceptedTerms.includes(label.dataset.label)).length;
                 label.dataset.remaining = String(originalCount);
                 const badge = label.querySelector('.count-badge');
                 if (badge) badge.textContent = String(originalCount);
@@ -1638,24 +1378,24 @@ class DynamicDragDropActivity {
         const dropZones = this.activityDropZones.querySelectorAll('.drop-zone');
         dropZones.forEach(zone => {
             zone.classList.remove('correct', 'incorrect', 'highlight');
-            const placedLabel = zone.querySelector('.placed-label');
-            if (placedLabel) {
-                placedLabel.remove();
-            }
+            const placedLabels = zone.querySelectorAll('.placed-label');
+            placedLabels.forEach(label => {
+                label.remove();
+            });
         });
 
         // Reset timer display
         this.timerDisplay.textContent = '00:00';
         
         // Hide submit button, also make sure it's re-enabled and label reset
-        this.submitScoreBtn.style.display = 'none';
+        this.answerHandler.hideSubmitButton();
         this.submitScoreBtn.disabled = false;
         this.submitScoreBtn.textContent = 'Submit Score';
         
         // Show start activity button again
         this.startActivityBtn.style.display = 'inline-block';
 
-        this.updateProgress();
+        this.answerHandler.updateProgress();
         this.feedback.textContent = '';
         this.feedback.className = 'feedback';
         this.showFeedback('Activity reset! Click "Start Activity" to begin again.', 'success');
@@ -1684,84 +1424,10 @@ class DynamicDragDropActivity {
         this.passwordModal.style.display = 'none';
     }
 
-    createScoreReport(scoreData) {
-        // Create a downloadable score report as JSON
-        const reportData = {
-            ...scoreData,
-            reportGeneratedAt: new Date().toISOString(),
-            reportType: 'student_score_report'
-        };
-        
-        const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `score_report_${this.studentName}_${this.currentActivity.name}_${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        console.log('Score report downloaded:', reportData);
-    }
-
-    initializeScoreSubmission() {
-        // This method will be used to set up Google Form submission
-        console.log('Score submission system initialized for Google Form submission');
-        console.log('Using Google Form submission method with URL:', this.scoreSubmissionConfig.googleFormUrl);
-    }
-
-    handleScoreSubmissionFallback(scoreData) {
-        // Store score in localStorage as backup
-        const storedScores = JSON.parse(localStorage.getItem('dragDropScores') || '[]');
-        storedScores.push({
-            ...scoreData,
-            storedAt: new Date().toISOString()
-        });
-        localStorage.setItem('dragDropScores', JSON.stringify(storedScores));
-        
-        // Create downloadable report - DISABLED to prevent automatic download
-        // this.createScoreReport(scoreData);
-        
-        this.showFeedback('📋 Score saved locally. Please contact your teacher to submit manually.', 'info');
-        console.log('Score stored locally as backup:', scoreData);
-    }
-
-    getStoredScores() {
-        const storedScores = JSON.parse(localStorage.getItem('dragDropScores') || '[]');
-        return storedScores;
-    }
-
-    clearStoredScores() {
-        localStorage.removeItem('dragDropScores');
-        this.showFeedback('All stored scores cleared.', 'success');
-    }
-
-    exportStoredScores() {
-        const storedScores = this.getStoredScores();
-        if (storedScores.length === 0) {
-            this.showFeedback('No stored scores found.', 'info');
-            return;
-        }
-        
-        const blob = new Blob([JSON.stringify(storedScores, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `stored_scores_${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        this.showFeedback(`Exported ${storedScores.length} stored scores.`, 'success');
-    }
-
     // NEW: fully clear student UI state (submit button, status, feedback, progress, timer)
     resetUIState() {
         // Reset counters and in-memory flags
-        this.correctPlacements = 0;
-        // Removed placedLabels.clear() - no longer using Set
+        this.answerHandler.reset();
         this.isActivityActive = false;
 
         // Timer
@@ -1787,7 +1453,7 @@ class DynamicDragDropActivity {
 
         // Submit Score button
         if (this.submitScoreBtn) {
-            this.submitScoreBtn.style.display = 'none';
+            this.answerHandler.hideSubmitButton();
             this.submitScoreBtn.disabled = false;
             this.submitScoreBtn.textContent = 'Submit Score';
         }
@@ -1800,180 +1466,8 @@ class DynamicDragDropActivity {
         if (this.startActivityBtn) this.startActivityBtn.style.display = 'inline-block';
     }
 
-    // NEW: Show a permanent submission note near the submit button
-    showSubmissionStatus({ studentName, timeSubmittedISO, durationFormatted }) {
-        let note = document.getElementById('submission-status');
-        if (!note) {
-            note = document.createElement('div');
-            note.id = 'submission-status';
-            note.className = 'submission-status';
-            // place it right below the submit button
-            this.submitScoreBtn.insertAdjacentElement('afterend', note);
-        }
-        const submittedAt = new Date(timeSubmittedISO).toLocaleString();
-        note.textContent = `${studentName} submitted on ${submittedAt} — Time: ${durationFormatted}`;
-    }
 
-    // --- Auto-fit the placed label's font size to the drop zone or grid cell ---
-    fitLabelToZone(labelEl, containerEl = labelEl, { minPx = 10, maxPx } = {}) {
-        const span = labelEl.querySelector('.label-text') || labelEl.querySelector('span') || labelEl;
 
-        // Compute available space based on whether this is a multi-term or single-term zone
-        const tryFit = () => {
-            // Get the drop zone element that contains this label
-            const dropZone = labelEl.closest('.drop-zone');
-            if (!dropZone) {
-                requestAnimationFrame(tryFit);
-                return;
-            }
-
-            // Determine if this is a multi-term zone by checking the zone data
-            const zoneId = dropZone.dataset.zoneId;
-            const zone = this.dropZones.find(z => z.id === zoneId);
-            const isMultiTermZone = zone && (zone.maxAllowed === null || zone.maxAllowed > 1);
-
-            let availableWidth, availableHeight;
-            
-            if (isMultiTermZone) {
-                // For multi-term zones: use the individual grid cell dimensions (containerEl)
-                const cellWidth = containerEl.clientWidth;
-                const cellHeight = containerEl.clientHeight;
-                
-                if (cellWidth === 0 || cellHeight === 0) {
-                    requestAnimationFrame(tryFit);
-                    return;
-                }
-                
-                // Use 90% of the individual cell size for multi-term zones
-                availableWidth = cellWidth * 0.9;
-                availableHeight = cellHeight * 0.9;
-            } else {
-                // For single-term zones: the label box fills 100% of the zone,
-                // so we calculate text size based on 90% of the label box dimensions
-                const labelBox = labelEl;
-                const labelWidth = labelBox.clientWidth;
-                const labelHeight = labelBox.clientHeight;
-                
-                if (labelWidth === 0 || labelHeight === 0) {
-                    requestAnimationFrame(tryFit);
-                    return;
-                }
-                
-                // Use 90% of the label box size (which fills the entire zone)
-                availableWidth = labelWidth * 0.9;
-                availableHeight = labelHeight * 0.9;
-            }
-
-            // Read the padding from the placed-label itself
-            const cs = getComputedStyle(labelEl);
-            const padL = parseFloat(cs.paddingLeft) || 0;
-            const padR = parseFloat(cs.paddingRight) || 0;
-            const padT = parseFloat(cs.paddingTop) || 0;
-            const padB = parseFloat(cs.paddingBottom) || 0;
-
-            // Subtract padding from available space
-            const textWidth = availableWidth - padL - padR;
-            const textHeight = availableHeight - padT - padB;
-
-            // Debug logging to see what dimensions we're working with
-            console.log(`Font sizing for "${span.textContent.trim()}":`, {
-                availableWidth,
-                availableHeight,
-                textWidth,
-                textHeight
-            });
-
-            // Ensure minimum dimensions
-            if (textWidth <= 0 || textHeight <= 0) {
-                requestAnimationFrame(tryFit);
-                return;
-            }
-
-            // Calculate maximum font size based on available height (90% of available space)
-            const maxFontSize = Math.floor(textHeight * 0.9);
-            const ceiling = Math.max(28, Math.min(maxFontSize, 120)); // never lower than 28, never absurd
-
-            // Check if this is a symbol-only label (arrows, etc.)
-            const labelText = span.textContent.trim();
-            const isSymbolOnly = /^[↑↓←→↑↓]$/.test(labelText) || labelText.length <= 2;
-            
-            // For symbols, use a higher minimum size
-            const effectiveMinPx = isSymbolOnly ? Math.max(40, minPx) : minPx;
-
-            let lo = effectiveMinPx, hi = (typeof maxPx === 'number' ? maxPx : ceiling), best = effectiveMinPx;
-
-            // Binary search for largest size that fits within the calculated available space
-            while (lo <= hi) {
-                const mid = Math.floor((lo + hi) / 2);
-                span.style.fontSize = mid + 'px';
-
-                // Force reflow-based fit check
-                const fits = (labelEl.scrollWidth <= textWidth) && (labelEl.scrollHeight <= textHeight);
-
-                if (fits) {
-                    best = mid;
-                    lo = mid + 1;
-                } else {
-                    hi = mid - 1;
-                }
-            }
-
-            span.style.fontSize = best + 'px';
-        };
-
-        requestAnimationFrame(tryFit);
-    }
-
-    // Refit all placed labels (call on resize, etc.)
-    fitAllPlacedLabels() {
-        const labels = this.activityDropZones?.querySelectorAll('.placed-label') || [];
-        labels.forEach(pl => {
-            const dropZone = pl.closest('.drop-zone');
-            const isMultiTermZone = dropZone && dropZone.querySelector('.placed-labels')?.classList.contains('grid-layout');
-            
-            if (isMultiTermZone) {
-                // For multi-term zones: fit to individual cell
-                this.fitLabelToZone(pl, pl);
-            } else {
-                // For single-term zones: fit to entire zone
-                this.fitLabelToZone(pl, dropZone);
-            }
-        });
-    }
-
-    checkAllZonesComplete() {
-        return this.dropZones.every(zone => {
-            if (zone.decoy) {
-                // Decoy zones should be empty
-                const zoneElement = document.getElementById(zone.id);
-                if (zoneElement) {
-                    const placedLabels = zoneElement.querySelectorAll('.placed-label');
-                    return placedLabels.length === 0;
-                }
-                return true;
-            } else {
-                // Non-decoy zones should meet their requirements
-                const zoneElement = document.getElementById(zone.id);
-                if (zoneElement) {
-                    const placedLabels = zoneElement.querySelectorAll('.placed-label');
-                    const placedCount = placedLabels.length;
-                    
-                    // Check if all placed terms are accepted
-                    const allTermsAccepted = Array.from(placedLabels).every(label => {
-                        const term = label.querySelector('span').textContent;
-                        return zone.acceptedTerms.includes(term);
-                    });
-                    
-                    // Check if count meets requirements
-                    const meetsMin = placedCount >= zone.minRequired;
-                    const meetsMax = zone.maxAllowed === null || placedCount <= zone.maxAllowed;
-                    
-                    return allTermsAccepted && meetsMin && meetsMax;
-                }
-                return false;
-            }
-        });
-    }
 }
 
 // Zoom and pan functionality

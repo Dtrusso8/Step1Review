@@ -8,7 +8,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #4B9CD3 0%, #13294B 100%);
     min-height: 100vh;
-    padding: 20px;
+    padding: 20px 20px 20px 0px;
 }
 
 .container {
@@ -24,7 +24,7 @@ header {
     background: linear-gradient(135deg, #13294B 0%, #4B9CD3 100%);
     color: white;
     text-align: center;
-    padding: 30px 20px;
+    padding: 20px 20px;
 }
 
 header h1 {
@@ -117,6 +117,32 @@ header p {
 .primary-button:disabled:hover {
     transform: none;
     box-shadow: 0 5px 15px rgba(75, 156, 211, 0.3);
+}
+
+/* Pulsing animation for Start Activity button */
+#start-activity-btn {
+    animation: gentlePulse 2s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+    0% {
+        box-shadow: 0 5px 15px rgba(75, 156, 211, 0.3);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 15px 45px rgba(76, 175, 80, 0.8);
+        transform: scale(1.04);
+    }
+    100% {
+        box-shadow: 0 5px 15px rgba(75, 156, 211, 0.3);
+        transform: scale(1);
+    }
+}
+
+/* Stop pulsing when button is disabled or activity is active */
+#start-activity-btn:disabled,
+#start-activity-btn[style*="display: none"] {
+    animation: none;
 }
 
 .secondary-button {
@@ -274,8 +300,8 @@ header p {
 /* Drop zones */
 .drop-zone {
     position: absolute;
-    border: 2px dashed #4B9CD3;
-    background: rgba(75, 156, 211, 0.1);
+    border: 3px dashed #4B9CD3;
+    background: rgba(75, 156, 211, 0.25);
     border-radius: 8px;
     cursor: move;
     transition: all 0.3s ease;
@@ -284,8 +310,9 @@ header p {
 }
 
 .drop-zone:hover {
-    background: rgba(75, 156, 211, 0.2);
+    background: rgba(75, 156, 211, 0.4);
     border-color: #13294B;
+    border-width: 4px;
 }
 
 .drop-zone.selected {
@@ -354,16 +381,17 @@ header p {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    padding: 1px 1px 1px 1px;      /* Minimal padding: 2px top/bottom, 20px right (for ✕), 4px left */
+    padding: 2px 0px 2px 0px;      /* Small vertical padding to prevent clipping */
     border-radius: 2px;              /* Reduced from 8px for tighter fit */
-    border: 2px solid #4B9CD3;
+    border: 2px solid #13294B;       /* Darker border for better visibility */
     background: #fff;                /* high contrast */
     color: #13294B;
-    font-weight: 700;
-    line-height: 1;                /* Tighter line height */
+    font-weight: 800;                /* Increased from 700 to 800 for better visibility */
+    line-height: 1.2;              /* Relaxed line height to prevent clipping */
     pointer-events: auto;
     min-height: 0;                   /* Allow grid to control height */
     min-width: 0;                   /* Allow grid to control width */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow for better readability */
 }
 
 /* Single-term zone labels should fill the entire zone */
@@ -378,23 +406,29 @@ header p {
 .drop-zone .placed-label .label-text {
     display: block;
     width: 100%;
+    max-width: 95%;              /* Encourage wrapping by constraining width slightly */
     overflow: hidden;
-    word-break: break-word;
+    word-break: break-word;      /* Allow breaking long words if needed */
+    overflow-wrap: break-word;   /* Allow wrapping at word boundaries */
+    white-space: normal;         /* Allow wrapping */
     text-align: center;
+    line-height: inherit;        /* Inherit the relaxed line height from parent */
+    font-size: 0.95em;          /* Slightly larger text for better readability */
+    letter-spacing: 0.02em;     /* Slight letter spacing for better clarity */
     /* Font size will be controlled by JavaScript for proper grid cell fitting */
 }
 
 /* Overlay the ✕ so it doesn't push/squish the text */
 .remove-label-btn {
     position: absolute;
-    top: 2px;                    /* Reduced from 4px to match new padding */
-    right: 2px;                  /* Reduced from 4px to match new padding */
-    width: 16px;                 /* Reduced from 20px for tighter fit */
-    height: 16px;                /* Reduced from 20px for tighter fit */
+    top: 1px;                    /* Reduced to match no padding */
+    right: 1px;                  /* Reduced to match no padding */
+    width: 14px;                 /* Reduced for tighter fit */
+    height: 14px;                /* Reduced for tighter fit */
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 10px;             /* Reduced from 12px for smaller button */
+    font-size: 9px;              /* Reduced for smaller button */
     font-weight: 800;
     display: grid;
     place-items: center;
@@ -699,6 +733,40 @@ header p {
     padding: 20px;
 }
 
+.student-activity-title {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 2px solid #e9ecef;
+    text-align: center;
+}
+
+.student-activity-title h2 {
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+.student-controls-container {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 2px solid #e9ecef;
+    text-align: center;
+}
+
+.student-info-container {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .student-info {
     background: #f8f9fa;
     padding: 15px 20px;
@@ -746,7 +814,7 @@ header p {
 .labels-container {
     position: fixed;
     top: 100px; /* Adjust vertically as needed */
-    right: 20px; /* Dock to the right side */
+    right: 10px; /* Dock to the right side */
     z-index: 2000; /* Always on top */
     background: rgba(255, 255, 255, 0.95);
     border-radius: 8px;
@@ -773,7 +841,7 @@ header p {
     transition: all 0.3s ease;
     user-select: none;
     margin-bottom: 10px;
-    min-height: 50px;
+    min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1062,7 +1130,7 @@ header p {
 }
 
 .drop-zone.setup-zone:hover {
-    background: rgba(75, 156, 211, 0.3);
+    background: rgba(75, 156, 211, 0.4);
     transform: scale(1.05);
 }
 
@@ -1070,6 +1138,44 @@ header p {
     cursor: grabbing;
     background: rgba(75, 156, 211, 0.4);
     transform: scale(1.1);
+}
+
+/* Resize handle for teacher mode drop zones */
+.drop-zone.setup-zone .resize-handle {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    width: 12px;
+    height: 12px;
+    background: #4B9CD3;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: nw-resize;
+    z-index: 1001;
+    opacity: 0;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.drop-zone.setup-zone:hover .resize-handle {
+    opacity: 1;
+}
+
+.drop-zone.setup-zone .resize-handle:hover {
+    background: #13294B;
+    transform: scale(1.2);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.drop-zone.setup-zone .resize-handle:active {
+    background: #ff6b6b;
+    cursor: nw-resize;
+    transform: scale(1.1);
+}
+
+/* Show resize handle when zone is selected */
+.drop-zone.setup-zone.selected .resize-handle {
+    opacity: 1;
 }
 
 /* Student mode zones */

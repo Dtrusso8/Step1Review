@@ -22,7 +22,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 27.01,
+      "x": 26.86,
       "y": 30,
       "width": 14,
       "height": 9
@@ -35,7 +35,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 27.17,
+      "x": 26.86,
       "y": 39.69,
       "width": 14,
       "height": 9
@@ -48,7 +48,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 26.98,
+      "x": 26.86,
       "y": 49.54,
       "width": 14,
       "height": 9
@@ -61,7 +61,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 27.22,
+      "x": 26.86,
       "y": 58.77,
       "width": 14,
       "height": 9
@@ -74,7 +74,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 27.53,
+      "x": 26.86,
       "y": 68.15,
       "width": 14,
       "height": 9
@@ -87,7 +87,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 27.36,
+      "x": 26.86,
       "y": 77.69,
       "width": 14,
       "height": 9
@@ -100,8 +100,8 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 68.59,
-      "y": 39.54,
+      "x": 67.98319444444442,
+      "y": 39.38567901234568,
       "width": 14,
       "height": 9
     },
@@ -113,7 +113,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 68.33,
+      "x": 67.98319444444442,
       "y": 29.81,
       "width": 14,
       "height": 9
@@ -126,8 +126,8 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 68.07,
-      "y": 20.25,
+      "x": 67.98319444444442,
+      "y": 20.09567901234568,
       "width": 14,
       "height": 9
     },
@@ -139,7 +139,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 46.63,
+      "x": 46.81,
       "y": 77.65,
       "width": 14,
       "height": 9
@@ -152,7 +152,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 46.98,
+      "x": 46.81,
       "y": 58.52,
       "width": 14,
       "height": 9
@@ -178,7 +178,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 47.15,
+      "x": 46.81,
       "y": 39.69,
       "width": 14,
       "height": 9
@@ -204,7 +204,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 27.71,
+      "x": 26.86,
       "y": 86.76,
       "width": 14,
       "height": 9
@@ -217,7 +217,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 68.58,
+      "x": 67.98319444444442,
       "y": 49.23,
       "width": 14,
       "height": 9
@@ -230,7 +230,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 68.58,
+      "x": 67.98319444444442,
       "y": 87.19,
       "width": 14,
       "height": 9
@@ -243,7 +243,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 68.32,
+      "x": 67.98319444444442,
       "y": 77.93,
       "width": 14,
       "height": 9
@@ -256,7 +256,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 68.4,
+      "x": 67.98319444444442,
       "y": 68.21,
       "width": 14,
       "height": 9
@@ -269,7 +269,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 68.66,
+      "x": 67.98319444444442,
       "y": 58.8,
       "width": 14,
       "height": 9
@@ -282,7 +282,7 @@
       "minRequired": 1,
       "maxAllowed": 1,
       "decoy": false,
-      "x": 89.34,
+      "x": 89.6,
       "y": 76.85,
       "width": 10,
       "height": 10
@@ -327,6 +327,6 @@
       "height": 10
     }
   ],
-  "savedAt": "2025-08-27T16:47:24.819Z",
+  "savedAt": "2025-09-09T18:27:40.240Z",
   "version": "2.0"
 }

@@ -1,0 +1,319 @@
+{
+  "activityName": "Glomerular Hemodynamics Table",
+  "dropZones": [
+    {
+      "id": "zone-0",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.5001,
+      "y": 27.718599999999995,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 61.25033207593849,
+      "y": 35.04670001159636,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-2",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 61.91683255250721,
+      "y": 50.83566666975903,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340101687",
+      "acceptedTerms": [
+        "↔"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 82.6671,
+      "y": 86.21776666743976,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340101911",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 82.083751090509,
+      "y": 75.23366653524131,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340102157",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 82.083751090509,
+      "y": 67.36669990954843,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340102421",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 82.083751090509,
+      "y": 59.94503328153628,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340102653",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 82.083751090509,
+      "y": 51.78119999072292,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340102891",
+      "acceptedTerms": [
+        "↔"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 81.91708225367518,
+      "y": 42.28146670686736,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340103171",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 82.00041667209209,
+      "y": 34.85980007885521,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340103451",
+      "acceptedTerms": [
+        "↔"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 81.66707899842446,
+      "y": 27.735000115963544,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340103737",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 62.000156252034536,
+      "y": 86.21773314469931,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340104392",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 61.16680000000001,
+      "y": 75.08526666743977,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340104574",
+      "acceptedTerms": [
+        "↔"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 61.833487415200715,
+      "y": 67.06983324442795,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340104758",
+      "acceptedTerms": [
+        "↔"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 61.666834418416904,
+      "y": 60.241899999999994,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340104941",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 61.58348415995,
+      "y": 42.4299000394276,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340105140",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 61.08347764944856,
+      "y": 27.735000115963544,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340105363",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 38.24984700321619,
+      "y": 87.10833314006076,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340105579",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.91650932954857,
+      "y": 75.82739986548229,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340105825",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.91650932954857,
+      "y": 67.06983324442795,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340106105",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.999843747965464,
+      "y": 59.94503328153628,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340106415",
+      "acceptedTerms": [
+        "↓"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.58317165588094,
+      "y": 51.0390333279217,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340106727",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.83317491113166,
+      "y": 42.578333371987846,
+      "width": 15,
+      "height": 6
+    },
+    {
+      "id": "zone-1757340106895",
+      "acceptedTerms": [
+        "↑"
+      ],
+      "minRequired": 1,
+      "maxAllowed": 1,
+      "decoy": false,
+      "x": 37.66650607429784,
+      "y": 35.00823341141545,
+      "width": 15,
+      "height": 6
+    }
+  ],
+  "savedAt": "2025-09-08T14:06:45.994Z",
+  "version": "2.0"
+}
