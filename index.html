@@ -7,11 +7,49 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Offline access button fixed to opening screen -->
+    <div style="text-align: center; margin: 12px 0;">
+        <button id="select-offline-folder-btn" class="secondary-button" style="opacity: 0.8; font-size: 0.9rem;">
+            Select Folder (Offline)
+        </button>
+    </div>
+
     <div class="container">
         <header>
             <h1>Drag & Drop</h1>
             <p>Instructions (button coming soon)</p>
         </header>
+
+        <!-- Student Activity Title - Above Controls -->
+        <div class="student-activity-title" id="student-activity-title" style="display: none;">
+            <h2 id="activity-title-display">Student Mode - Activity</h2>
+            <div class="mode-indicator student-indicator">Student Mode</div>
+        </div>
+
+        <!-- Student Controls Container - Above Image -->
+        <div class="student-controls-container" id="student-controls-container" style="display: none;">
+            <div class="mode-controls">
+                <button id="start-activity-btn" class="primary-button">Start Activity</button>
+                <button id="back-to-selection-student-btn" class="secondary-button">Back to Selection</button>
+                <button id="back-to-teacher-btn" class="secondary-button">Teacher Mode</button>
+            </div>
+        </div>
+
+        <!-- Student Info Container - Above Image -->
+        <div class="student-info-container" id="student-info-container" style="display: none;">
+            <div class="student-name-display">
+                <strong>Student:</strong> <span id="display-student-name"></span>
+            </div>
+            <!-- Zoom Buttons Here -->
+            <div class="zoom-controls">
+                <button class="zoom-button" onclick="zoomImage('in', 'shared-image-container')">+</button>
+                <button class="zoom-button" onclick="zoomImage('out', 'shared-image-container')">−</button>
+                <button class="zoom-button" onclick="resetZoom('shared-image-container')">Reset</button>
+            </div>
+            <div class="timer-display">
+                <strong>Time:</strong> <span id="timer-display">00:00</span>
+            </div>
+        </div>
 
         <!-- Activity Selection -->
         <div class="activity-selection" id="activity-selection">
@@ -64,6 +102,7 @@
                     <ul>
                         <li>Click "Add Drop Zone" to create new zones</li>
                         <li>Drag zones to position them on the image</li>
+                        <li>Drag the resize handle (small circle) in the bottom-right corner to resize zones</li>
                         <li>Click zones to configure their assigned terms</li>
                         <li>Use "Clear All Terms" to reset assignments while keeping zones</li>
                         <li>Switch to Student Mode when setup is complete</li>
@@ -81,16 +120,8 @@
             <div class="zone-config" id="zone-config" style="display: none;">
                 <h3>Configure Drop Zone</h3>
                 <div class="config-form">
-                    <!-- Decoy zone checkbox -->
-                    <div class="decoy-section">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="zone-decoy">
-                            <span class="checkmark"></span>
-                            Decoy Zone (rejects all drops)
-                        </label>
-                    </div>
                     
-                    <!-- Zone configuration fields (disabled when decoy is checked) -->
+                    <!-- Zone configuration fields -->
                     <div class="zone-config-fields" id="zone-config-fields">
                         <label for="zone-accepted-terms">Accepted Terms:</label>
                         <div class="terms-multiselect" id="zone-accepted-terms">
@@ -140,31 +171,6 @@
 
         <!-- Student Mode -->
         <div class="student-mode" id="student-mode" style="display: none;">
-            <div class="mode-header">
-                <h2 id="activity-title-display">Student Mode - Activity</h2>
-                <div class="mode-indicator student-indicator">👨‍🎓 Student Mode</div>
-                <div class="mode-controls">
-                    <button id="start-activity-btn" class="primary-button">Start Activity</button>
-                    <button id="back-to-teacher-btn" class="secondary-button">Back to Teacher Mode</button>
-                    <button id="back-to-selection-student-btn" class="secondary-button">Back to Selection</button>
-                </div>
-            </div>
-
-            <!-- Student Info Section -->
-            <div class="student-info" id="student-info" style="display: none;">
-                <div class="student-name-display">
-                    <strong>Student:</strong> <span id="display-student-name"></span>
-                </div>
-                <!-- Zoom Buttons Here -->
-                <div class="zoom-controls">
-                    <button class="zoom-button" onclick="zoomImage('in', 'shared-image-container')">+</button>
-                    <button class="zoom-button" onclick="zoomImage('out', 'shared-image-container')">−</button>
-                    <button class="zoom-button" onclick="resetZoom('shared-image-container')">Reset</button>
-                </div>
-                <div class="timer-display">
-                    <strong>Time:</strong> <span id="timer-display">00:00</span>
-                </div>
-            </div>
 
             <!-- Draggable labels - Fixed position outside image container -->
             <div class="labels-container" id="labels-container">
@@ -192,6 +198,7 @@
     <div class="submit-section">
         <button id="submit-score-btn" class="primary-button" style="display: none;">Submit Score</button>
     </div>
+
 
     <!-- Google Sheet Form (Hidden) -->
     <form id="googleSheetForm" action="https://script.google.com/macros/s/AKfycbyw0AR6itqy6CrvoOYrzyDwg1EawucJ2Oj06-i032QC_FKREzj7qE5vrHvSfdrxpsvL/exec" method="POST" target="hidden-iframe" style="display: none;">
@@ -225,6 +232,8 @@
     </div>
 
     <script src="activity-loader.js"></script>
+    <script src="answer-handler.js"></script>
+    <script src="text-fitting.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 
