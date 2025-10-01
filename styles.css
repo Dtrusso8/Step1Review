@@ -836,7 +836,7 @@ header p {
     cursor: grab;
     text-align: center;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.1rem; /* Default size, can be overridden by JavaScript */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     user-select: none;
@@ -845,6 +845,11 @@ header p {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Allow JavaScript to override font size for longer terms */
+.draggable-label span {
+    font-size: inherit; /* Inherit from parent, allowing JS to override */
 }
 
 .draggable-label:not([draggable="true"]) {

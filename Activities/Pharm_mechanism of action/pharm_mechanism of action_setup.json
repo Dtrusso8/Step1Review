@@ -1,5 +1,5 @@
 {
-  "activityName": "pharm_mechanism of action",
+  "activityName": "Pharm_mechanism of action",
   "dropZones": [
     {
       "id": "zone-0",
@@ -10,8 +10,7 @@
         "Triamterene"
       ],
       "minRequired": 1,
-      "maxAllowed": 4,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 16.83,
       "y": 27.56,
       "width": 9,
@@ -23,12 +22,11 @@
         "Lisinopril"
       ],
       "minRequired": 1,
-      "maxAllowed": 1,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 39.17,
       "y": 27.55,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-5",
@@ -36,12 +34,11 @@
         "Lisinopril"
       ],
       "minRequired": 1,
-      "maxAllowed": 1,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 39.34,
       "y": 50.3,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-6",
@@ -50,8 +47,7 @@
         "Verapamil"
       ],
       "minRequired": 1,
-      "maxAllowed": 2,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 28,
       "y": 50.96,
       "width": 9,
@@ -63,12 +59,11 @@
         "Losartan"
       ],
       "minRequired": 1,
-      "maxAllowed": 1,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 50.83,
       "y": 27.18,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-8",
@@ -76,12 +71,11 @@
         "Prazosin"
       ],
       "minRequired": 1,
-      "maxAllowed": 1,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 75.33,
       "y": 50.74,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-9",
@@ -89,12 +83,11 @@
         "Clonidine"
       ],
       "minRequired": 1,
-      "maxAllowed": 1,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 87.83,
       "y": 50.89,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-10",
@@ -102,12 +95,11 @@
         "Clonidine"
       ],
       "minRequired": 1,
-      "maxAllowed": 1,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 87.91,
       "y": 74.74,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-11",
@@ -115,12 +107,11 @@
         "Metroprolol"
       ],
       "minRequired": 1,
-      "maxAllowed": 1,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 63.17,
       "y": 74.74,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-12",
@@ -128,135 +119,123 @@
         "Losartan"
       ],
       "minRequired": 1,
-      "maxAllowed": 1,
-      "decoy": false,
+      "maxAllowed": null,
       "x": 51.25,
       "y": 51.04,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074693447",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
       "x": 63.33,
       "y": 27.19,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074704047",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
       "x": 75.17,
       "y": 27.33,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074711373",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
       "x": 87.75,
       "y": 27.19,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074721514",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
       "x": 16.33,
-      "y": 52.22,
+      "y": 52.06567901234567,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074734463",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
       "x": 16.92,
       "y": 74.59,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074744492",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
-      "x": 28,
-      "y": 74.74,
+      "x": 28.000000000000004,
+      "y": 74.58567901234568,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074754702",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
-      "x": 50.75,
-      "y": 74.59,
+      "x": 50.66319444444445,
+      "y": 74.43567901234567,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074767863",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
       "x": 75.42,
       "y": 74.59,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074781135",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
       "x": 63.25,
       "y": 51.33,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074790414",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
       "x": 27.75,
-      "y": 27.48,
+      "y": 27.33,
       "width": 9,
-      "height": 7
+      "height": 20
     },
     {
       "id": "zone-1756074808936",
       "acceptedTerms": [],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": true,
-      "x": 38.75,
+      "x": 38.923611111111114,
       "y": 74.74,
       "width": 9,
-      "height": 7
+      "height": 20
     }
   ],
-  "savedAt": "2025-08-24T22:47:43.098Z",
+  "savedAt": "2025-09-24T18:59:55.969Z",
   "version": "2.0"
 }

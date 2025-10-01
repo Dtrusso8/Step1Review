@@ -1,6 +1,13 @@
 {
   "activities": [
     {
+      "name": "Acute Phase Reactants",
+      "displayName": "Acute Phase Reactants",
+      "image": "Activities/Acute Phase Reactants/Acute Phase Reactants.png",
+      "termsFile": "Activities/Acute Phase Reactants/Acute Phase Reactants_terms.txt",
+      "setupFile": "Activities/Acute Phase Reactants/Acute Phase Reactants_setup.json"
+    },
+    {
       "name": "Adrenergic Nervous System Table",
       "displayName": "Adrenergic Nervous System Table",
       "image": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table.png",
@@ -8,11 +15,32 @@
       "setupFile": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table_setup.json"
     },
     {
+      "name": "AIDS - Defining Illness",
+      "displayName": "Aids - Defining Illness",
+      "image": "Activities/AIDS - Defining Illness/AIDS - Defining Illness.png",
+      "termsFile": "Activities/AIDS - Defining Illness/AIDS - Defining Illness_terms.txt",
+      "setupFile": "Activities/AIDS - Defining Illness/AIDS - Defining Illness_setup.json"
+    },
+    {
+      "name": "Angina Table",
+      "displayName": "Angina Table",
+      "image": "Activities/Angina Table/Angina Table.png",
+      "termsFile": "Activities/Angina Table/Angina Table_terms.txt",
+      "setupFile": "Activities/Angina Table/Angina Table_setup.json"
+    },
+    {
       "name": "Antiarrhythmic Activity",
       "displayName": "Antiarrhythmic Activity",
       "image": "Activities/Antiarrhythmic Activity/AA.png",
       "termsFile": "Activities/Antiarrhythmic Activity/aa_terms.txt",
       "setupFile": "Activities/Antiarrhythmic Activity/Antiarrhythmic Activity_setup.json"
+    },
+    {
+      "name": "Antimicrobials mechanism of action",
+      "displayName": "Antimicrobials Mechanism Of Action",
+      "image": "Activities/Antimicrobials mechanism of action/Antimicrobials mechanism of action.png",
+      "termsFile": "Activities/Antimicrobials mechanism of action/Antimicrobials mechanism of action_terms.txt",
+      "setupFile": "Activities/Antimicrobials mechanism of action/Antimicrobials mechanism of action_setup.json"
     },
     {
       "name": "Coagulation cascade",
@@ -64,11 +92,18 @@
       "setupFile": "Activities/HIV Drugs/HIV Drugs_setup.json"
     },
     {
+      "name": "Innate vs. Adaptive Immunity",
+      "displayName": "Innate Vs. Adaptive Immunity",
+      "image": "Activities/Innate vs. Adaptive Immunity/Innate Vs Adaptive Immunity.png",
+      "termsFile": "Activities/Innate vs. Adaptive Immunity/Innate Vs Adaptive Immunity_terms.txt",
+      "setupFile": "Activities/Innate vs. Adaptive Immunity/Innate vs. Adaptive Immunity_setup.json"
+    },
+    {
       "name": "K Shifts",
       "displayName": "K Shifts",
       "image": "Activities/K Shifts/k shifts.png",
       "termsFile": "Activities/K Shifts/k shifts_terms.txt",
-      "setupFile": null
+      "setupFile": "Activities/K Shifts/K Shifts_setup.json"
     },
     {
       "name": "Lung Cancer Table",

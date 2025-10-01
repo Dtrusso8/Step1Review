@@ -1,8 +1,13 @@
+[fixed-top]
 Squamous Cell Carcinoma
 Adenocarcinoma
 Small Cell Carcinoma
+
+[random]
 Central
 Peripheral
+
+[random]
 Paraneoplastic Syndrome- PTHrP
 neuroendocrine-type chromatin
 Aggressive

@@ -1207,6 +1207,7 @@ class DynamicDragDropActivity {
     }
 
     createDraggableLabels() {
+        console.log('🚀 createDraggableLabels() called');
         this.labelsContainer.innerHTML = '<h3>Terms to Place:</h3>';
 
         // Count how many zones expect each term (only from non-blank zones)
@@ -1216,17 +1217,36 @@ class DynamicDragDropActivity {
             .flatMap(z => z.acceptedTerms)
             .forEach(term => { counts[term] = (counts[term] || 0) + 1; });
 
-        // Convert to array and randomize the order of terms
-        const termsArray = Object.entries(counts);
-        
-        // Fisher-Yates shuffle algorithm for true randomization
-        for (let i = termsArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [termsArray[i], termsArray[j]] = [termsArray[j], termsArray[i]];
-        }
+        // Determine desired order from any termOrdering metadata populated by the loader
+        const ordering = (this.currentActivity && this.currentActivity.termOrdering) || null;
+        const uniqueTermsUsed = Object.keys(counts);
+
+        // fixed-top terms that are actually used
+        const fixedTop = ordering ? ordering.fixedTop.filter(t => uniqueTermsUsed.includes(t)) : [];
+
+        // Build the rest from clusters. If no ordering info, treat all remaining as one cluster.
+        const clusters = ordering && Array.isArray(ordering.randomClusters) && ordering.randomClusters.length > 0
+            ? ordering.randomClusters
+            : [uniqueTermsUsed.filter(t => !fixedTop.includes(t))];
+
+        const ordered = [...fixedTop];
+        clusters.forEach(cluster => {
+            // Use only terms that are actually used and not already included
+            let terms = cluster.filter(t => uniqueTermsUsed.includes(t) && !ordered.includes(t));
+            if (!(ordering && ordering.noShuffle)) {
+                // shuffle within cluster
+                for (let i = terms.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [terms[i], terms[j]] = [terms[j], terms[i]];
+                }
+            }
+            ordered.push(...terms);
+        });
 
         // Build one tile per unique term. If count > 1, it becomes multi-use.
-        termsArray.forEach(([term, count]) => {
+        ordered.forEach((term) => {
+            const count = counts[term];
+            if (!count) return;
             const label = document.createElement('div');
             label.className = 'draggable-label';
             label.draggable = false; // enabled on Start
@@ -1246,7 +1266,14 @@ class DynamicDragDropActivity {
 
             this.labelsContainer.appendChild(label);
         });
+
+        // After all labels are created, shrink fonts to fit the fixed panel width
+        // Use setTimeout to ensure DOM is fully rendered
+        setTimeout(() => {
+            this.textFitting.adjustDraggableLabelFontSizesPrecise(this.labelsContainer);
+        }, 100);
     }
+
 
     setupDragAndDrop() {
         const draggableLabels = this.labelsContainer.querySelectorAll('.draggable-label');
@@ -1534,6 +1561,20 @@ document.addEventListener('mousemove', e => {
 
 document.addEventListener('mouseup', () => {
     isPanning = false;
+});
+
+// Keyboard shortcut: Escape resets zoom/pan and cancels panning
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const container = document.getElementById('shared-image-container');
+        if (!container) return;
+        const id = container.id;
+        const currentScale = zoomLevels[id] || 1;
+        if (currentScale !== 1 || container.classList.contains('zoomed')) {
+            isPanning = false;
+            resetZoom(id);
+        }
+    }
 });
 
 // Initialize the app when the DOM is loaded

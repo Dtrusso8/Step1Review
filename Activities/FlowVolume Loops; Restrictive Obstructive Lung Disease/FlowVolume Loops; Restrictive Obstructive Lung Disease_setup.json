@@ -8,11 +8,10 @@
       ],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": false,
-      "x": 31.01160287537974,
-      "y": 48.095238095238095,
-      "width": 15,
-      "height": 10
+      "x": 21.37,
+      "y": 45.53,
+      "width": 12.22,
+      "height": 9.55
     },
     {
       "id": "zone-2",
@@ -21,9 +20,8 @@
       ],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": false,
-      "x": 61.4213,
-      "y": 19.86394557823129,
+      "x": 46.32,
+      "y": 16.51,
       "width": 15,
       "height": 10
     },
@@ -34,11 +32,10 @@
       ],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": false,
-      "x": 66.63160922160816,
-      "y": 71.0884911564626,
-      "width": 7,
-      "height": 10
+      "x": 54.39,
+      "y": 74.56,
+      "width": 5,
+      "height": 7.2
     },
     {
       "id": "zone-4",
@@ -47,11 +44,10 @@
       ],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": false,
-      "x": 49.90569077839183,
-      "y": 78.63943809523809,
-      "width": 15,
-      "height": 10
+      "x": 37.5,
+      "y": 82.78,
+      "width": 16.04,
+      "height": 6
     },
     {
       "id": "zone-5",
@@ -60,11 +56,10 @@
       ],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": false,
-      "x": 50.01080922160818,
-      "y": 89.59176326530613,
-      "width": 15,
-      "height": 10
+      "x": 37.5,
+      "y": 90.37,
+      "width": 21.68,
+      "height": 6
     },
     {
       "id": "zone-1757075863339",
@@ -73,13 +68,12 @@
       ],
       "minRequired": 1,
       "maxAllowed": 1,
-      "decoy": false,
-      "x": 74.29299999999999,
-      "y": 59.38774557823129,
-      "width": 15,
-      "height": 10
+      "x": 58.32,
+      "y": 66.32,
+      "width": 19.95,
+      "height": 5
     }
   ],
-  "savedAt": "2025-09-05T12:42:00.480Z",
+  "savedAt": "2025-09-24T15:38:57.310Z",
   "version": "2.0"
 }

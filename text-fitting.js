@@ -268,4 +268,81 @@ class TextFitting {
             }
         });
     }
+
+    // Precisely shrink each draggable label text to fit in a single line within the fixed 250px panel
+    adjustDraggableLabelFontSizesPrecise(labelsContainer) {
+        console.log('🚀 adjustDraggableLabelFontSizesPrecise called');
+        const labels = labelsContainer.querySelectorAll('.draggable-label');
+        console.log(`🔍 Found ${labels.length} draggable labels`);
+        
+        if (!labels || labels.length === 0) {
+            console.log('❌ No labels found, returning');
+            return;
+        }
+
+        labels.forEach((label, index) => {
+            const span = label.querySelector('span');
+            if (!span) {
+                console.log(`❌ No span found in label ${index}`);
+                return;
+            }
+
+            const text = span.textContent.trim();
+            console.log(`📝 Processing label ${index}: "${text}"`);
+
+            // Compute available width inside the label box (account for padding)
+            const csLabel = getComputedStyle(label);
+            const padL = parseFloat(csLabel.paddingLeft) || 0;
+            const padR = parseFloat(csLabel.paddingRight) || 0;
+            const availableWidth = Math.max(0, label.clientWidth - padL - padR);
+            
+            console.log(`📏 Label ${index} - Available width: ${availableWidth}px, Text: "${text}"`);
+
+            // Create a temporary element to measure text accurately
+            const temp = document.createElement('span');
+            temp.textContent = text;
+            temp.style.position = 'absolute';
+            temp.style.visibility = 'hidden';
+            temp.style.whiteSpace = 'nowrap';
+            temp.style.fontFamily = getComputedStyle(label).fontFamily;
+            temp.style.fontWeight = getComputedStyle(label).fontWeight;
+            document.body.appendChild(temp);
+
+            // Establish font-size bounds (px) - more readable minimum
+            const currentPx = parseFloat(getComputedStyle(label).fontSize) || 18;
+            let lo = 10;          // minimum readable size
+            let hi = Math.max(14, Math.min(28, Math.round(currentPx))); // reasonable ceiling
+            let best = lo;
+
+            console.log(`🔍 Binary search range for "${text}": ${lo}px to ${hi}px`);
+
+            // Binary search for largest font-size that keeps text within availableWidth
+            while (lo <= hi) {
+                const mid = Math.floor((lo + hi) / 2);
+                temp.style.fontSize = mid + 'px';
+
+                // Measure the actual text width
+                const needed = temp.offsetWidth;
+
+                // Add 15px buffer for better readability
+                if (needed <= (availableWidth - 15)) {
+                    best = mid;
+                    lo = mid + 1;
+                    console.log(`✅ ${mid}px fits (${needed}px <= ${availableWidth - 15}px)`);
+                } else {
+                    hi = mid - 1;
+                    console.log(`❌ ${mid}px too big (${needed}px > ${availableWidth - 15}px)`);
+                }
+            }
+
+            // Clean up temporary element
+            document.body.removeChild(temp);
+
+            // Apply the best size found
+            label.style.setProperty('font-size', best + 'px', 'important');
+            console.log(`🎯 Final font size for "${text}": ${best}px`);
+        });
+        
+        console.log('✅ Font size adjustment complete');
+    }
 }

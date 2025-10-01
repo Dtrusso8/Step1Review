@@ -1,7 +1,10 @@
-Entry
-Reverse Transcriptase
-Integrase
+[fixed-top]
 Protease
+Reverse Transcriptase
+Entry
+Integrase
+
+[random]
 Enfuvertide
 Raltegravir
 Elvitegravir

@@ -95,11 +95,68 @@ class ActivityLoader {
         
         try {
             const termsText = await this.loadFileAsText(activity.termsFile);
-            const terms = termsText
-                .split('\n')
-                .map(term => term.trim())
-                .filter(term => term.length > 0);
-            
+
+            // Parse sections and directives from terms.txt
+            const fixedTop = [];
+            const randomClusters = [[]]; // start with a default cluster for unheaded/random lines
+            const seen = new Set();
+            let currentSection = 'random';
+            let currentClusterIndex = 0;
+            let noShuffle = false;
+
+            termsText.split('\n').forEach(rawLine => {
+                const line = rawLine.trim();
+                if (!line) return; // skip blanks
+
+                if (line === '@no-shuffle') { // directive to disable shuffling for this activity
+                    noShuffle = true;
+                    return;
+                }
+
+                if (line.startsWith('[') && line.endsWith(']')) {
+                    const section = line.slice(1, -1).toLowerCase();
+                    if (section === 'fixed-top') {
+                        currentSection = 'fixed-top';
+                    } else if (section === 'random') {
+                        currentSection = 'random';
+                        // start a new random cluster
+                        randomClusters.push([]);
+                        currentClusterIndex = randomClusters.length - 1;
+                    } else {
+                        // unknown section -> treat as random, new cluster
+                        currentSection = 'random';
+                        randomClusters.push([]);
+                        currentClusterIndex = randomClusters.length - 1;
+                    }
+                    return;
+                }
+
+                // de-duplicate while preserving first occurrence order
+                if (seen.has(line)) return;
+                seen.add(line);
+
+                if (currentSection === 'fixed-top') {
+                    fixedTop.push(line);
+                } else {
+                    // ensure at least one cluster exists
+                    if (randomClusters.length === 0) randomClusters.push([]);
+                    // if we haven't hit a [random] header yet, use the default first cluster (index 0)
+                    const idx = currentClusterIndex || 0;
+                    randomClusters[idx].push(line);
+                }
+            });
+
+            // Remove any empty clusters
+            const nonEmptyClusters = randomClusters.filter(cluster => cluster.length > 0);
+
+            const terms = [
+                ...fixedTop,
+                ...nonEmptyClusters.flat()
+            ];
+
+            // Store ordering metadata on the activity object for downstream use
+            activity.termOrdering = { fixedTop, randomClusters: nonEmptyClusters, noShuffle };
+
             console.log(`Loaded ${terms.length} terms for ${activity.name}:`, terms);
             return terms;
         } catch (error) {
