@@ -9,6 +9,9 @@ import json
 import glob
 from pathlib import Path
 
+# Global toggle for passwords in the generated JSON
+PASSWORDS_ENABLED = True
+
 def find_activity_files(activities_dir):
     """Scan the activities directory and find all activity folders with their files."""
     activities = []
@@ -53,6 +56,19 @@ def find_activity_files(activities_dir):
             # Use the first setup file found and convert to forward slashes
             setup_path = os.path.join("Activities", item, os.path.basename(setup_files[0]))
             activity_info["setupFile"] = setup_path.replace("\\", "/")
+
+        # Optional per-activity password from a file named exactly "password" or "password.txt"
+        pw_file = os.path.join(item_path, "password")
+        pw_file_txt = os.path.join(item_path, "password.txt")
+        pw_path = pw_file if os.path.isfile(pw_file) else (pw_file_txt if os.path.isfile(pw_file_txt) else None)
+        if pw_path:
+            try:
+                with open(pw_path, 'r', encoding='utf-8') as pf:
+                    pw = pf.read().strip()
+                    if pw:
+                        activity_info["password"] = pw
+            except Exception as e:
+                print(f"  - Warning: could not read password file for '{item}': {e}")
         
         # Only add activities that have at least an image and terms file
         if activity_info["image"] and activity_info["termsFile"]:
@@ -82,6 +98,7 @@ def generate_activities_json(activities_dir, output_file):
     
     # Create the JSON structure
     activities_data = {
+        "passwordsEnabled": PASSWORDS_ENABLED,
         "activities": activities
     }
     

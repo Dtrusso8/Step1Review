@@ -129,6 +129,12 @@ class DynamicDragDropActivity {
         
         // Back to selection button for students
         this.backToSelectionStudentBtn = document.getElementById('back-to-selection-student-btn');
+
+        // Instructions modal elements
+        this.instructionsModal = document.getElementById('instructions-modal');
+        this.instructionsOpenBtn = document.getElementById('open-instructions-btn');
+        this.instructionsCloseBtn = document.getElementById('instructions-close');
+        this.instructionsBody = document.getElementById('instructions-body');
     }
 
     async loadActivities() {
@@ -238,6 +244,157 @@ class DynamicDragDropActivity {
                 }, 150); // Slightly longer delay to ensure resize is complete
             }
         });
+
+        // Instructions modal open/close
+        if (this.instructionsOpenBtn) {
+            this.instructionsOpenBtn.addEventListener('click', () => this.openInstructions());
+        }
+        if (this.instructionsCloseBtn) {
+            this.instructionsCloseBtn.addEventListener('click', () => this.closeInstructions());
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.instructionsModal && this.instructionsModal.style.display !== 'none') {
+                this.closeInstructions();
+            }
+        });
+    }
+
+    async openInstructions() {
+        if (!this.instructionsModal) return;
+        // Show modal
+        this.instructionsModal.style.display = 'flex';
+        // Load content
+        await this.loadInstructionsContent();
+    }
+
+    closeInstructions() {
+        if (!this.instructionsModal) return;
+        this.instructionsModal.style.display = 'none';
+        // Cleanup body content except title and loader container
+        const body = this.instructionsBody;
+        if (body) {
+            body.innerHTML = '<h2 id="instructions-title" style="margin-bottom: 12px;">Instructions</h2><div id="instructions-loader" style="text-align:center; padding: 20px;">Loading…</div>';
+        }
+    }
+
+    async loadInstructionsContent() {
+        const container = this.instructionsBody;
+        if (!container) return;
+        const loader = container.querySelector('#instructions-loader');
+        if (loader) loader.textContent = 'Loading…';
+
+        // Determine candidate files within "Instructions button" folder
+        const folder = 'Instructions button';
+        const candidates = [
+            'instructions.html',
+            'index.html',
+            'instructions.md',
+            'instructions.pdf',
+            'instructions.png', 'instructions.jpg', 'instructions.jpeg', 'instructions.webp', 'instructions.gif',
+            'README.md'
+        ];
+
+        try {
+            let loaded = false;
+
+            // Offline mode: use File System Access API
+            if (this.isOffline && this.offlineRootHandle) {
+                for (const name of candidates) {
+                    try {
+                        const path = `${folder}/${name}`;
+                        const textExtensions = ['.html', '.md'];
+                        if (textExtensions.some(ext => name.toLowerCase().endsWith(ext))) {
+                            const content = await this.readTextFileViaFS(path);
+                            this.renderInstructions(container, name, content);
+                            loaded = true;
+                            break;
+                        } else {
+                            // For binary types (image/pdf), build an object URL
+                            const fileHandle = await this.getFileHandleByPath(path);
+                            const file = await fileHandle.getFile();
+                            const url = URL.createObjectURL(file);
+                            this.renderInstructions(container, name, url, true);
+                            loaded = true;
+                            break;
+                        }
+                    } catch (_) { /* try next */ }
+                }
+            } else {
+                // Online mode: try fetch from relative path; append cache-buster
+                for (const name of candidates) {
+                    const url = `${folder}/${name}`;
+                    const buster = `?v=${Date.now()}`;
+                    if (name.endsWith('.html') || name.endsWith('.md')) {
+                        const res = await fetch(url + buster, { cache: 'no-store' });
+                        if (res.ok) {
+                            const content = await res.text();
+                            this.renderInstructions(container, name, content);
+                            loaded = true;
+                            break;
+                        }
+                    } else {
+                        // For binary types, just point the src/href; we can't verify easily without HEAD
+                        this.renderInstructions(container, name, url + buster, true);
+                        loaded = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!loaded) {
+                if (loader) loader.remove();
+                const msg = document.createElement('div');
+                msg.style.textAlign = 'center';
+                msg.style.padding = '20px';
+                msg.textContent = 'No instructions content found in "Instructions button" folder.';
+                container.appendChild(msg);
+            }
+        } catch (e) {
+            console.error('Failed to load instructions:', e);
+            if (loader) loader.remove();
+            const msg = document.createElement('div');
+            msg.style.textAlign = 'center';
+            msg.style.padding = '20px';
+            msg.textContent = 'Error loading instructions.';
+            container.appendChild(msg);
+        }
+    }
+
+    renderInstructions(container, filename, payload, isBinary = false) {
+        // Clear loader/content under the title
+        container.innerHTML = '<h2 id="instructions-title" style="margin-bottom: 12px;">Instructions</h2>';
+
+        const lower = filename.toLowerCase();
+        if (lower.endsWith('.html')) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'instructions-content';
+            wrapper.innerHTML = payload;
+            container.appendChild(wrapper);
+        } else if (lower.endsWith('.md')) {
+            // Minimal markdown to HTML: paragraphs and line breaks
+            const html = payload
+                .split('\n\n')
+                .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`) // very basic
+                .join('');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'instructions-content';
+            wrapper.innerHTML = html;
+            container.appendChild(wrapper);
+        } else if (lower.endsWith('.pdf')) {
+            const iframe = document.createElement('iframe');
+            iframe.className = 'instructions-content';
+            iframe.src = isBinary ? payload : `${payload}`;
+            container.appendChild(iframe);
+        } else if (lower.match(/\.(png|jpe?g|webp|gif)$/)) {
+            const img = document.createElement('img');
+            img.className = 'instructions-content';
+            img.src = isBinary ? payload : `${payload}`;
+            container.appendChild(img);
+        } else {
+            const pre = document.createElement('pre');
+            pre.textContent = 'Unsupported instructions format.';
+            container.appendChild(pre);
+        }
     }
 
     async loadSelectedActivity() {
@@ -270,6 +427,21 @@ class DynamicDragDropActivity {
         if (!this.currentActivity) {
             this.showFeedback('Activity not found.', 'error');
             return;
+        }
+
+        // Per-activity password gate from generated JSON
+        try {
+            const enabled = (typeof window !== 'undefined') && (window.PASSWORDS_ENABLED === true);
+            const required = enabled ? (this.currentActivity.password || '') : '';
+            if (required) {
+                const input = (window.prompt(`Enter password for "${this.currentActivity.displayName}":`) || '').trim();
+                if (input !== required) {
+                    this.showFeedback('Incorrect activity password.', 'error');
+                    return;
+                }
+            }
+        } catch (e) {
+            console.warn('Password check failed; proceeding without gate.', e);
         }
 
         // NEW: Reset UI state for clean slate (defensive clear)

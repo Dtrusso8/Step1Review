@@ -42,6 +42,15 @@ class ActivityLoader {
                                 console.log('Activities array length:', data.activities.length);
                                 console.log('Activities array:', data.activities);
                                 
+                                // Expose top-level passwords toggle globally
+                                try {
+                                    if (typeof window !== 'undefined') {
+                                        window.PASSWORDS_ENABLED = data.passwordsEnabled === true;
+                                    }
+                                } catch (e) {
+                                    console.warn('Could not set PASSWORDS_ENABLED on window.', e);
+                                }
+                                
                                 // Process each activity to add terms and setup data
                                 console.log('Starting to process activities...');
                                 const processedActivities = data.activities.map((activity, index) => {

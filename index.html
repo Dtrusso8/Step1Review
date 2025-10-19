@@ -17,7 +17,9 @@
     <div class="container">
         <header>
             <h1>Drag & Drop</h1>
-            <p>Instructions (button coming soon)</p>
+            <p>
+                <button id="open-instructions-btn" class="secondary-button" style="font-size: 1rem;">Instructions</button>
+            </p>
         </header>
 
         <!-- Student Activity Title - Above Controls -->
@@ -227,6 +229,17 @@
             <div class="modal-buttons">
                 <button id="submit-password-btn" class="primary-button">Submit</button>
                 <button id="cancel-password-btn" class="secondary-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div id="instructions-modal" class="modal" style="display: none;">
+        <div class="instructions-modal-content" role="dialog" aria-modal="true" aria-labelledby="instructions-title">
+            <button class="instructions-close" id="instructions-close" aria-label="Close">✕</button>
+            <div id="instructions-body">
+                <h2 id="instructions-title" style="margin-bottom: 12px;">Instructions</h2>
+                <div id="instructions-loader" style="text-align:center; padding: 20px;">Loading…</div>
             </div>
         </div>
     </div>

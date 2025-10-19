@@ -1,18 +1,52 @@
 {
+  "passwordsEnabled": true,
   "activities": [
     {
-      "name": "Acute Phase Reactants",
-      "displayName": "Acute Phase Reactants",
-      "image": "Activities/Acute Phase Reactants/Acute Phase Reactants.png",
-      "termsFile": "Activities/Acute Phase Reactants/Acute Phase Reactants_terms.txt",
-      "setupFile": "Activities/Acute Phase Reactants/Acute Phase Reactants_setup.json"
+      "name": "0-Acute Phase Reactants",
+      "displayName": "0-Acute Phase Reactants",
+      "image": "Activities/0-Acute Phase Reactants/Acute Phase Reactants.png",
+      "termsFile": "Activities/0-Acute Phase Reactants/Acute Phase Reactants_terms.txt",
+      "setupFile": "Activities/0-Acute Phase Reactants/Acute Phase Reactants_setup.json"
     },
     {
-      "name": "Adrenergic Nervous System Table",
-      "displayName": "Adrenergic Nervous System Table",
-      "image": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table.png",
-      "termsFile": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table_terms.txt",
-      "setupFile": "Activities/Adrenergic Nervous System Table/Adrenergic Nervous System Table_setup.json"
+      "name": "1-Gram Negative Bacteria",
+      "displayName": "1-Gram Negative Bacteria",
+      "image": "Activities/1-Gram Negative Bacteria/Chart.png",
+      "termsFile": "Activities/1-Gram Negative Bacteria/chart_terms.txt",
+      "setupFile": "Activities/1-Gram Negative Bacteria/Chart_setup.json",
+      "password": "pickle"
+    },
+    {
+      "name": "2-Hepatitis B Serologies",
+      "displayName": "2-Hepatitis B Serologies",
+      "image": "Activities/2-Hepatitis B Serologies/hepb.png",
+      "termsFile": "Activities/2-Hepatitis B Serologies/hepb_terms.txt",
+      "setupFile": "Activities/2-Hepatitis B Serologies/Hepatitis B serologies_setup.json",
+      "password": "pirate"
+    },
+    {
+      "name": "3-Autonomic Nervous System",
+      "displayName": "3-Autonomic Nervous System",
+      "image": "Activities/3-Autonomic Nervous System/Adrenergic Nervous System Table.png",
+      "termsFile": "Activities/3-Autonomic Nervous System/Adrenergic Nervous System Table_terms.txt",
+      "setupFile": "Activities/3-Autonomic Nervous System/Adrenergic Nervous System Table_setup.json",
+      "password": "yoyo"
+    },
+    {
+      "name": "4-Acute Coronary Syndromes",
+      "displayName": "4-Acute Coronary Syndromes",
+      "image": "Activities/4-Acute Coronary Syndromes/Angina Table.png",
+      "termsFile": "Activities/4-Acute Coronary Syndromes/Angina Table_terms.txt",
+      "setupFile": "Activities/4-Acute Coronary Syndromes/Angina Table_setup.json",
+      "password": "noodles"
+    },
+    {
+      "name": "5-Lung Cancer",
+      "displayName": "5-Lung Cancer",
+      "image": "Activities/5-Lung Cancer/Lung Cancer Table.png",
+      "termsFile": "Activities/5-Lung Cancer/Lung Cancer Table_terms.txt",
+      "setupFile": "Activities/5-Lung Cancer/Lung Cancer Table_setup.json",
+      "password": "lava"
     },
     {
       "name": "AIDS - Defining Illness",
@@ -20,13 +54,6 @@
       "image": "Activities/AIDS - Defining Illness/AIDS - Defining Illness.png",
       "termsFile": "Activities/AIDS - Defining Illness/AIDS - Defining Illness_terms.txt",
       "setupFile": "Activities/AIDS - Defining Illness/AIDS - Defining Illness_setup.json"
-    },
-    {
-      "name": "Angina Table",
-      "displayName": "Angina Table",
-      "image": "Activities/Angina Table/Angina Table.png",
-      "termsFile": "Activities/Angina Table/Angina Table_terms.txt",
-      "setupFile": "Activities/Angina Table/Angina Table_setup.json"
     },
     {
       "name": "Antiarrhythmic Activity",
@@ -78,13 +105,6 @@
       "setupFile": "Activities/Glomerular Hemodynamics Table/Glomerular Hemodynamics Table_setup.json"
     },
     {
-      "name": "Hepatitis B serologies",
-      "displayName": "Hepatitis B Serologies",
-      "image": "Activities/Hepatitis B serologies/hepb.png",
-      "termsFile": "Activities/Hepatitis B serologies/hepb_terms.txt",
-      "setupFile": "Activities/Hepatitis B serologies/Hepatitis B serologies_setup.json"
-    },
-    {
       "name": "HIV Drugs",
       "displayName": "Hiv Drugs",
       "image": "Activities/HIV Drugs/hiv drugs.png",
@@ -104,20 +124,6 @@
       "image": "Activities/K Shifts/k shifts.png",
       "termsFile": "Activities/K Shifts/k shifts_terms.txt",
       "setupFile": "Activities/K Shifts/K Shifts_setup.json"
-    },
-    {
-      "name": "Lung Cancer Table",
-      "displayName": "Lung Cancer Table",
-      "image": "Activities/Lung Cancer Table/Lung Cancer Table.png",
-      "termsFile": "Activities/Lung Cancer Table/Lung Cancer Table_terms.txt",
-      "setupFile": "Activities/Lung Cancer Table/Lung Cancer Table_setup.json"
-    },
-    {
-      "name": "negative-gram bacteria",
-      "displayName": "Negative-Gram Bacteria",
-      "image": "Activities/negative-gram bacteria/Chart.png",
-      "termsFile": "Activities/negative-gram bacteria/chart_terms.txt",
-      "setupFile": "Activities/negative-gram bacteria/Chart_setup.json"
     },
     {
       "name": "Pharm_mechanism of action",

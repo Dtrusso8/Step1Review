@@ -12,7 +12,7 @@ class AnswerHandler {
         // Score submission configuration
         this.scoreSubmissionConfig = {
             enabled: true,
-            googleFormUrl: 'https://script.google.com/macros/s/AKfycbyw0AR6itqy6CrvoOYrzyDwg1EawucJ2Oj06-i032QC_FKREzj7qE5vrHvSfdrxpsvL/exec',
+            googleFormUrl: 'https://script.google.com/macros/s/AKfycbywMI1iJsXObD2MwCZhtqcdhHLIHHUSbqvQkLZUaPN4RdWgTxF1d6JP4qSLGeDD_uY/exec',
             fallback: {
                 showInConsole: true,
                 createDownloadableReport: true,

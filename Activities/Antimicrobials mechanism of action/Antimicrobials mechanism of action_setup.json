@@ -27,16 +27,6 @@
       "height": 21.56
     },
     {
-      "id": "zone-2",
-      "acceptedTerms": [],
-      "minRequired": 1,
-      "maxAllowed": 1,
-      "x": 50,
-      "y": 40,
-      "width": 15,
-      "height": 10
-    },
-    {
       "id": "zone-3",
       "acceptedTerms": [
         "Vancomycin",
@@ -104,6 +94,6 @@
       "height": 24.37
     }
   ],
-  "savedAt": "2025-09-26T17:31:16.706Z",
+  "savedAt": "2025-10-08T19:26:36.755Z",
   "version": "2.0"
 }
