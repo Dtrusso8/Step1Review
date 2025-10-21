@@ -17,6 +17,62 @@
       "password": "pickle"
     },
     {
+      "name": "10-Opportunistic Infections",
+      "displayName": "10-Opportunistic Infections",
+      "image": "Activities/10-Opportunistic Infections/AIDS - Defining Illness.png",
+      "termsFile": "Activities/10-Opportunistic Infections/AIDS - Defining Illness_terms.txt",
+      "setupFile": "Activities/10-Opportunistic Infections/AIDS - Defining Illness_setup.json",
+      "password": "sunbeams"
+    },
+    {
+      "name": "11-Shock",
+      "displayName": "11-Shock",
+      "image": "Activities/11-Shock/shock classification.png",
+      "termsFile": "Activities/11-Shock/shock classification_terms.txt",
+      "setupFile": "Activities/11-Shock/shock classification site_setup.json",
+      "password": "chickpea"
+    },
+    {
+      "name": "12-K Shifts",
+      "displayName": "12-K Shifts",
+      "image": "Activities/12-K Shifts/k shifts.png",
+      "termsFile": "Activities/12-K Shifts/k shifts_terms.txt",
+      "setupFile": "Activities/12-K Shifts/K Shifts_setup.json",
+      "password": "booger"
+    },
+    {
+      "name": "13-Diuretics",
+      "displayName": "13-Diuretics",
+      "image": "Activities/13-Diuretics/diarrhea.png",
+      "termsFile": "Activities/13-Diuretics/diarrhea_terms.txt",
+      "setupFile": "Activities/13-Diuretics/Diuretic Site of Action_setup.json",
+      "password": "freckles"
+    },
+    {
+      "name": "14-Innate-Adaptive Immunity",
+      "displayName": "14-Innate-Adaptive Immunity",
+      "image": "Activities/14-Innate-Adaptive Immunity/Innate Vs Adaptive Immunity.png",
+      "termsFile": "Activities/14-Innate-Adaptive Immunity/Innate Vs Adaptive Immunity_terms.txt",
+      "setupFile": "Activities/14-Innate-Adaptive Immunity/Innate vs. Adaptive Immunity_setup.json",
+      "password": "ringo"
+    },
+    {
+      "name": "15-HIV Pharmacology",
+      "displayName": "15-Hiv Pharmacology",
+      "image": "Activities/15-HIV Pharmacology/hiv drugs.png",
+      "termsFile": "Activities/15-HIV Pharmacology/hiv drugs_terms.txt",
+      "setupFile": "Activities/15-HIV Pharmacology/HIV Drugs_setup.json",
+      "password": "whisper"
+    },
+    {
+      "name": "16-GFR-RPF Arrows",
+      "displayName": "16-Gfr-Rpf Arrows",
+      "image": "Activities/16-GFR-RPF Arrows/GHT.png",
+      "termsFile": "Activities/16-GFR-RPF Arrows/GHT_terms.txt",
+      "setupFile": "Activities/16-GFR-RPF Arrows/Glomerular Hemodynamics Table_setup.json",
+      "password": "towel"
+    },
+    {
       "name": "2-Hepatitis B Serologies",
       "displayName": "2-Hepatitis B Serologies",
       "image": "Activities/2-Hepatitis B Serologies/hepb.png",
@@ -49,25 +105,36 @@
       "password": "lava"
     },
     {
-      "name": "AIDS - Defining Illness",
-      "displayName": "Aids - Defining Illness",
-      "image": "Activities/AIDS - Defining Illness/AIDS - Defining Illness.png",
-      "termsFile": "Activities/AIDS - Defining Illness/AIDS - Defining Illness_terms.txt",
-      "setupFile": "Activities/AIDS - Defining Illness/AIDS - Defining Illness_setup.json"
+      "name": "6-Pressure Volume Curve",
+      "displayName": "6-Pressure Volume Curve",
+      "image": "Activities/6-Pressure Volume Curve/FV loops.png",
+      "termsFile": "Activities/6-Pressure Volume Curve/FV loops_terms.txt",
+      "setupFile": "Activities/6-Pressure Volume Curve/FlowVolume Loops; Restrictive Obstructive Lung Disease_setup.json",
+      "password": "glacier"
     },
     {
-      "name": "Antiarrhythmic Activity",
-      "displayName": "Antiarrhythmic Activity",
-      "image": "Activities/Antiarrhythmic Activity/AA.png",
-      "termsFile": "Activities/Antiarrhythmic Activity/aa_terms.txt",
-      "setupFile": "Activities/Antiarrhythmic Activity/Antiarrhythmic Activity_setup.json"
+      "name": "7-Antiarrhythmics",
+      "displayName": "7-Antiarrhythmics",
+      "image": "Activities/7-Antiarrhythmics/AA.png",
+      "termsFile": "Activities/7-Antiarrhythmics/aa_terms.txt",
+      "setupFile": "Activities/7-Antiarrhythmics/Antiarrhythmic Activity_setup.json",
+      "password": "uranus"
     },
     {
-      "name": "Antimicrobials mechanism of action",
-      "displayName": "Antimicrobials Mechanism Of Action",
-      "image": "Activities/Antimicrobials mechanism of action/Antimicrobials mechanism of action.png",
-      "termsFile": "Activities/Antimicrobials mechanism of action/Antimicrobials mechanism of action_terms.txt",
-      "setupFile": "Activities/Antimicrobials mechanism of action/Antimicrobials mechanism of action_setup.json"
+      "name": "8-Flow Volume Loops",
+      "displayName": "8-Flow Volume Loops",
+      "image": "Activities/8-Flow Volume Loops/PV loop.png",
+      "termsFile": "Activities/8-Flow Volume Loops/PV loop_terms.txt",
+      "setupFile": "Activities/8-Flow Volume Loops/Pressure-Volume (PV) Loop_setup.json",
+      "password": "helmet"
+    },
+    {
+      "name": "9-Antimicrobials",
+      "displayName": "9-Antimicrobials",
+      "image": "Activities/9-Antimicrobials/Antimicrobials mechanism of action.png",
+      "termsFile": "Activities/9-Antimicrobials/Antimicrobials mechanism of action_terms.txt",
+      "setupFile": "Activities/9-Antimicrobials/Antimicrobials mechanism of action_setup.json",
+      "password": "falcon"
     },
     {
       "name": "Coagulation cascade",
@@ -77,74 +144,11 @@
       "setupFile": "Activities/Coagulation cascade/Coagulation cascade_setup.json"
     },
     {
-      "name": "Diuretic Site of Action",
-      "displayName": "Diuretic Site Of Action",
-      "image": "Activities/Diuretic Site of Action/diarrhea.png",
-      "termsFile": "Activities/Diuretic Site of Action/diarrhea_terms.txt",
-      "setupFile": "Activities/Diuretic Site of Action/Diuretic Site of Action_setup.json"
-    },
-    {
-      "name": "FlowVolume Loops; Restrictive Obstructive Lung Disease",
-      "displayName": "Flowvolume Loops; Restrictive Obstructive Lung Disease",
-      "image": "Activities/FlowVolume Loops; Restrictive Obstructive Lung Disease/FV loops.png",
-      "termsFile": "Activities/FlowVolume Loops; Restrictive Obstructive Lung Disease/FV loops_terms.txt",
-      "setupFile": "Activities/FlowVolume Loops; Restrictive Obstructive Lung Disease/FlowVolume Loops; Restrictive Obstructive Lung Disease_setup.json"
-    },
-    {
-      "name": "FP TEAM HOORAH!",
-      "displayName": "Fp Team Hoorah!",
-      "image": "Activities/FP TEAM HOORAH!/test.png",
-      "termsFile": "Activities/FP TEAM HOORAH!/test_terms.txt",
-      "setupFile": "Activities/FP TEAM HOORAH!/test_setup.json"
-    },
-    {
-      "name": "Glomerular Hemodynamics Table",
-      "displayName": "Glomerular Hemodynamics Table",
-      "image": "Activities/Glomerular Hemodynamics Table/GHT.png",
-      "termsFile": "Activities/Glomerular Hemodynamics Table/GHT_terms.txt",
-      "setupFile": "Activities/Glomerular Hemodynamics Table/Glomerular Hemodynamics Table_setup.json"
-    },
-    {
-      "name": "HIV Drugs",
-      "displayName": "Hiv Drugs",
-      "image": "Activities/HIV Drugs/hiv drugs.png",
-      "termsFile": "Activities/HIV Drugs/hiv drugs_terms.txt",
-      "setupFile": "Activities/HIV Drugs/HIV Drugs_setup.json"
-    },
-    {
-      "name": "Innate vs. Adaptive Immunity",
-      "displayName": "Innate Vs. Adaptive Immunity",
-      "image": "Activities/Innate vs. Adaptive Immunity/Innate Vs Adaptive Immunity.png",
-      "termsFile": "Activities/Innate vs. Adaptive Immunity/Innate Vs Adaptive Immunity_terms.txt",
-      "setupFile": "Activities/Innate vs. Adaptive Immunity/Innate vs. Adaptive Immunity_setup.json"
-    },
-    {
-      "name": "K Shifts",
-      "displayName": "K Shifts",
-      "image": "Activities/K Shifts/k shifts.png",
-      "termsFile": "Activities/K Shifts/k shifts_terms.txt",
-      "setupFile": "Activities/K Shifts/K Shifts_setup.json"
-    },
-    {
       "name": "Pharm_mechanism of action",
       "displayName": "Pharm Mechanism Of Action",
       "image": "Activities/Pharm_mechanism of action/pharm_mechanism of action.png",
       "termsFile": "Activities/Pharm_mechanism of action/pharm_mechanism of actions_terms.txt",
       "setupFile": "Activities/Pharm_mechanism of action/pharm_mechanism of action_setup.json"
-    },
-    {
-      "name": "Pressure-Volume (PV) Loop",
-      "displayName": "Pressure-Volume (Pv) Loop",
-      "image": "Activities/Pressure-Volume (PV) Loop/PV loop.png",
-      "termsFile": "Activities/Pressure-Volume (PV) Loop/PV loop_terms.txt",
-      "setupFile": "Activities/Pressure-Volume (PV) Loop/Pressure-Volume (PV) Loop_setup.json"
-    },
-    {
-      "name": "shock classification site",
-      "displayName": "Shock Classification Site",
-      "image": "Activities/shock classification site/shock classification.png",
-      "termsFile": "Activities/shock classification site/shock classification_terms.txt",
-      "setupFile": "Activities/shock classification site/shock classification site_setup.json"
     }
   ]
 }
