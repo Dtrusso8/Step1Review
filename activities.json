@@ -128,27 +128,7 @@
       "termsFile": "Activities/16-GFR-RPF Arrows/GHT_terms.txt",
       "setupFile": "Activities/16-GFR-RPF Arrows/Glomerular Hemodynamics Table_setup.json",
       "password": "towel"
-    },
-    {
-      "name": "Acute Phase Reactants",
-      "displayName": "Acute Phase Reactants",
-      "image": "Activities/Acute Phase Reactants/Acute Phase Reactants.png",
-      "termsFile": "Activities/Acute Phase Reactants/Acute Phase Reactants_terms.txt",
-      "setupFile": "Activities/Acute Phase Reactants/Acute Phase Reactants_setup.json"
-    },
-    {
-      "name": "Coagulation cascade",
-      "displayName": "Coagulation Cascade",
-      "image": "Activities/Coagulation cascade/Coagulation cascade.png",
-      "termsFile": "Activities/Coagulation cascade/Coagulation cascade_terms.txt",
-      "setupFile": "Activities/Coagulation cascade/Coagulation cascade_setup.json"
-    },
-    {
-      "name": "Pharm_mechanism of action",
-      "displayName": "Pharm Mechanism Of Action",
-      "image": "Activities/Pharm_mechanism of action/pharm_mechanism of action.png",
-      "termsFile": "Activities/Pharm_mechanism of action/pharm_mechanism of actions_terms.txt",
-      "setupFile": "Activities/Pharm_mechanism of action/pharm_mechanism of action_setup.json"
     }
   ]
+
 }
