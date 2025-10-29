@@ -1,5 +1,5 @@
 {
-  "activityName": "Antimicrobials mechanism of action",
+  "activityName": "09-Antimicrobials",
   "dropZones": [
     {
       "id": "zone-0",
@@ -44,27 +44,16 @@
       "acceptedTerms": [
         "Penecillin G",
         "Piperacillin",
-        "Ceftriaxone"
-      ],
-      "minRequired": 1,
-      "maxAllowed": null,
-      "x": 13.67,
-      "y": 74.22,
-      "width": 15.58,
-      "height": 22.15
-    },
-    {
-      "id": "zone-5",
-      "acceptedTerms": [
+        "Ceftriaxone",
         "Imipenem",
         "Aztreonam"
       ],
       "minRequired": 1,
       "maxAllowed": null,
-      "x": 32.75,
-      "y": 73.56,
-      "width": 15.83,
-      "height": 20.67
+      "x": 14.277638888888887,
+      "y": 74.99162098765431,
+      "width": 25.909861111111113,
+      "height": 22.921604938271606
     },
     {
       "id": "zone-6",
@@ -94,6 +83,6 @@
       "height": 24.37
     }
   ],
-  "savedAt": "2025-10-08T19:26:36.755Z",
+  "savedAt": "2025-10-29T13:10:11.706Z",
   "version": "2.0"
 }
