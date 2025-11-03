@@ -1,5 +1,5 @@
 {
-  "passwordsEnabled": true,
+  "passwordsEnabled": false,
   "activities": [
     {
       "name": "01-Gram Negative Bacteria",
@@ -132,3 +132,4 @@
   ]
 
 }
+
