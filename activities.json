@@ -1,5 +1,5 @@
 {
-  "passwordsEnabled": false,
+  "passwordsEnabled": true,
   "activities": [
     {
       "name": "01-Gram Negative Bacteria",
@@ -26,11 +26,11 @@
       "password": "yoyo"
     },
     {
-      "name": "04-Acute Coronary Syndromes",
-      "displayName": "04-Acute Coronary Syndromes",
-      "image": "Activities/04-Acute Coronary Syndromes/Angina Table.png",
-      "termsFile": "Activities/04-Acute Coronary Syndromes/Angina Table_terms.txt",
-      "setupFile": "Activities/04-Acute Coronary Syndromes/Angina Table_setup.json",
+      "name": "04-Chest Pain Presentations",
+      "displayName": "04-Chest Pain Presentations",
+      "image": "Activities/04-Chest Pain Presentations/Angina Table.png",
+      "termsFile": "Activities/04-Chest Pain Presentations/Angina Table_terms.txt",
+      "setupFile": "Activities/04-Chest Pain Presentations/04-Acute Coronary Syndromes_setup.json",
       "password": "noodles"
     },
     {
@@ -42,11 +42,11 @@
       "password": "lava"
     },
     {
-      "name": "06-Pressure Volume Curve",
-      "displayName": "06-Pressure Volume Curve",
-      "image": "Activities/06-Pressure Volume Curve/FV loops.png",
-      "termsFile": "Activities/06-Pressure Volume Curve/FV loops_terms.txt",
-      "setupFile": "Activities/06-Pressure Volume Curve/FlowVolume Loops; Restrictive Obstructive Lung Disease_setup.json",
+      "name": "06-Flow Volume Loop",
+      "displayName": "06-Flow Volume Loop",
+      "image": "Activities/06-Flow Volume Loop/FV loops.png",
+      "termsFile": "Activities/06-Flow Volume Loop/FV loops_terms.txt",
+      "setupFile": "Activities/06-Flow Volume Loop/FlowVolume Loops; Restrictive Obstructive Lung Disease_setup.json",
       "password": "glacier"
     },
     {
@@ -58,11 +58,11 @@
       "password": "uranus"
     },
     {
-      "name": "08-Flow Volume Loops",
-      "displayName": "08-Flow Volume Loops",
-      "image": "Activities/08-Flow Volume Loops/PV loop.png",
-      "termsFile": "Activities/08-Flow Volume Loops/PV loop_terms.txt",
-      "setupFile": "Activities/08-Flow Volume Loops/Pressure-Volume (PV) Loop_setup.json",
+      "name": "08-Pressure Volume Curve",
+      "displayName": "08-Pressure Volume Curve",
+      "image": "Activities/08-Pressure Volume Curve/PV loop.png",
+      "termsFile": "Activities/08-Pressure Volume Curve/PV loop_terms.txt",
+      "setupFile": "Activities/08-Pressure Volume Curve/Pressure-Volume (PV) Loop_setup.json",
       "password": "helmet"
     },
     {
@@ -128,8 +128,27 @@
       "termsFile": "Activities/16-GFR-RPF Arrows/GHT_terms.txt",
       "setupFile": "Activities/16-GFR-RPF Arrows/Glomerular Hemodynamics Table_setup.json",
       "password": "towel"
+    },
+    {
+      "name": "Acute Phase Reactants",
+      "displayName": "Acute Phase Reactants",
+      "image": "Activities/Acute Phase Reactants/Acute Phase Reactants.png",
+      "termsFile": "Activities/Acute Phase Reactants/Acute Phase Reactants_terms.txt",
+      "setupFile": "Activities/Acute Phase Reactants/Acute Phase Reactants_setup.json"
+    },
+    {
+      "name": "Coagulation cascade",
+      "displayName": "Coagulation Cascade",
+      "image": "Activities/Coagulation cascade/Coagulation cascade.png",
+      "termsFile": "Activities/Coagulation cascade/Coagulation cascade_terms.txt",
+      "setupFile": "Activities/Coagulation cascade/Coagulation cascade_setup.json"
+    },
+    {
+      "name": "Pharm_mechanism of action",
+      "displayName": "Pharm Mechanism Of Action",
+      "image": "Activities/Pharm_mechanism of action/pharm_mechanism of action.png",
+      "termsFile": "Activities/Pharm_mechanism of action/pharm_mechanism of actions_terms.txt",
+      "setupFile": "Activities/Pharm_mechanism of action/pharm_mechanism of action_setup.json"
     }
   ]
-
 }
-
