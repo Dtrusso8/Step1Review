@@ -130,6 +130,21 @@
       "password": "towel"
     },
     {
+      "name": "17-Pleural Effusions and Light Criteria",
+      "displayName": "17-Pleural Effusions And Light Criteria",
+      "image": "Activities/17-Pleural Effusions and Light Criteria/Effusions.png",
+      "termsFile": "Activities/17-Pleural Effusions and Light Criteria/effusions_terms.txt",
+      "setupFile": "Activities/17-Pleural Effusions and Light Criteria/Pleural Effusions and Light Criteria_setup.json",
+      "password": "socks"
+    },
+    {
+      "name": "18-Endemic Dimorphic Fungi",
+      "displayName": "18-Endemic Dimorphic Fungi",
+      "image": "Activities/18-Endemic Dimorphic Fungi/endemic dimorphic fungi.png",
+      "termsFile": "Activities/18-Endemic Dimorphic Fungi/terms_terms.txt",
+      "setupFile": null
+    },
+    {
       "name": "Acute Phase Reactants",
       "displayName": "Acute Phase Reactants",
       "image": "Activities/Acute Phase Reactants/Acute Phase Reactants.png",
