@@ -142,7 +142,8 @@
       "displayName": "18-Endemic Dimorphic Fungi",
       "image": "Activities/18-Endemic Dimorphic Fungi/endemic dimorphic fungi.png",
       "termsFile": "Activities/18-Endemic Dimorphic Fungi/terms_terms.txt",
-      "setupFile": null
+      "setupFile": "Activities/18-Endemic Dimorphic Fungi/18-Endemic Dimorphic Fungi_setup.json",
+      "password": "murphy"
     },
     {
       "name": "Acute Phase Reactants",
