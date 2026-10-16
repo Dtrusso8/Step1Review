@@ -146,6 +146,14 @@
       "password": "murphy"
     },
     {
+      "name": "19-HIV Drug Categories",
+      "displayName": "19-Hiv Drug Categories",
+      "image": "Activities/19-HIV Drug Categories/Picture1.png",
+      "termsFile": "Activities/19-HIV Drug Categories/hiv durgs_terms.txt",
+      "setupFile": "Activities/19-HIV Drug Categories/19-HIV Drug Categories_setup.json",
+      "password": "pothole"
+    },
+    {
       "name": "Acute Phase Reactants",
       "displayName": "Acute Phase Reactants",
       "image": "Activities/Acute Phase Reactants/Acute Phase Reactants.png",
